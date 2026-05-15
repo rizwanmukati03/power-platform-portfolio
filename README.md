@@ -37,6 +37,7 @@ documented projects that solve actual business problems.
 - [Credential-Journey-Power-Platform-Functional-Consultant](https://arch-center.azureedge.net/Credentials/Credential-Journey-Power-Platform-Functional-Consultant.pdf#zoom=45%)
 - [Become Microsoft Certified](https://arch-center.azureedge.net/Credentials/Certification-Poster_en-us.pdf)
 - [AZ-900 - Microsoft Certified: Azure Fundamentals](https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?WT.mc_id=certposter_poster_wwl&practice-assessment-type=certification)
+- [PL-900 - Microsoft Certified: Power Platform Fundamentals](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-fundamentals/?WT.mc_id=certposter_poster_wwl&practice-assessment-type=certification)
 - [Training Dynamics365](https://learn.microsoft.com/en-us/training/dynamics365/)
 - [D365 Sales](https://learn.microsoft.com/en-us/training/dynamics365/sales)
 - [D365 Customer Service](https://learn.microsoft.com/en-us/training/dynamics365/customer-service)
