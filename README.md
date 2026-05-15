@@ -30,10 +30,10 @@ documented projects that solve actual business problems.
 
 ## 📚 Learning From
 - [Microsoft Learn](https://learn.microsoft.com)
-- [Microsoft Learn Credentials](https://learn.microsoft.com/en-us/credentials/)
 
 ## 📚 Important links
 - [Training Dynamics365](https://learn.microsoft.com/en-us/training/dynamics365/)
+- [Microsoft Learn Credentials](https://learn.microsoft.com/en-us/credentials/)
 - [Choose your Microsoft Credential](https://arch-center.azureedge.net/Credentials/choose-your-microsoft-credential.pdf)
 - [Credential-Journey-Power-Platform-Functional-Consultant](https://arch-center.azureedge.net/Credentials/Credential-Journey-Power-Platform-Functional-Consultant.pdf#zoom=45%)
 - [Become Microsoft Certified](https://arch-center.azureedge.net/Credentials/Certification-Poster_en-us.pdf)
