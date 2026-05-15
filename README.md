@@ -39,7 +39,6 @@ documented projects that solve actual business problems.
 - [PL-900 - Microsoft Certified: Power Platform Fundamentals](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-fundamentals/?WT.mc_id=certposter_poster_wwl&practice-assessment-type=certification)
 - [Credential-Journey-Power-Platform-Functional-Consultant](https://arch-center.azureedge.net/Credentials/Credential-Journey-Power-Platform-Functional-Consultant.pdf#zoom=45%)
 - [PL-200 - Microsoft Certified: Power Platform Functional Consultant Associate](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-functional-consultant-associate/?WT.mc_id=certposter_poster_wwl&practice-assessment-type=certification)
-- [PL-400 - Microsoft Certified: Power Platform Developer Associate](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/?practice-assessment-type=certification)
 - [Learning Path - Create a model-driven application in Power Apps](https://learn.microsoft.com/en-us/training/paths/create-app-models-business-processes/)
 - [Learning Path - Demonstrate the capabilities of Microsoft Power Apps](https://learn.microsoft.com/en-us/training/paths/demonstrate-capabilities-power-apps/)
 - Lisa Crosbie + Reza Dorrani youtube - model driven apps
@@ -48,6 +47,7 @@ documented projects that solve actual business problems.
 - [Dataverse Web API](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/overview)
 - [C# Plugin Development with Dataverse](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/plug-ins)
 - [Module - Use Microsoft 365 services with model-driven apps and Microsoft Dataverse](https://learn.microsoft.com/en-us/training/modules/use-services-model-driven-apps/)
+- [PL-400 - Microsoft Certified: Power Platform Developer Associate](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/?practice-assessment-type=certification)
 - [Training Dynamics365](https://learn.microsoft.com/en-us/training/dynamics365/)
 - [D365 Sales](https://learn.microsoft.com/en-us/training/dynamics365/sales)
 - [D365 Customer Service](https://learn.microsoft.com/en-us/training/dynamics365/customer-service)
