@@ -52,7 +52,7 @@ documented projects that solve actual business problems.
 - [Learning Path - Advanced Model-Driven Apps with Power Apps: Configuration, Customization, and Deployment Techniques](https://learn.microsoft.com/en-us/training/paths/advanced-model-driven-apps-configuration-customization-deployment/)
 - [Dataverse Web API](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/overview)
 - [C# Plugin Development with Dataverse](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/plug-ins)
-- [Use Microsoft 365 services with model-driven apps and Microsoft Dataverse](https://learn.microsoft.com/en-us/training/modules/use-services-model-driven-apps/)
+- [Module - Use Microsoft 365 services with model-driven apps and Microsoft Dataverse](https://learn.microsoft.com/en-us/training/modules/use-services-model-driven-apps/)
 
 
 
