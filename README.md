@@ -35,6 +35,7 @@ documented projects that solve actual business problems.
 ## 📚 Important links
 - [Training Dynamics365](https://learn.microsoft.com/en-us/training/dynamics365/)
 - [Choose your Microsoft Credential](https://arch-center.azureedge.net/Credentials/choose-your-microsoft-credential.pdf)
+- [Credential-Journey-Power-Platform-Functional-Consultant](https://arch-center.azureedge.net/Credentials/Credential-Journey-Power-Platform-Functional-Consultant.pdf#zoom=45%)
 
 ## 📬 Contact
 - LinkedIn: [paste your LinkedIn link here]
