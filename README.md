@@ -46,7 +46,7 @@ documented projects that solve actual business problems.
 - [PL-400 - Microsoft Certified: Power Platform Developer Associate](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/?practice-assessment-type=certification)
 - [Create a model-driven application in Power Apps](https://learn.microsoft.com/en-us/training/paths/create-app-models-business-processes/)
 - [Demonstrate the capabilities of Microsoft Power Apps](https://learn.microsoft.com/en-us/training/paths/demonstrate-capabilities-power-apps/)
-- Lisa Crosbie youtube - model driven apps
+- Lisa Crosbie + Reza Dorrani youtube - model driven apps
 - [Create and manage model-driven apps with Power Apps and Dataverse](https://learn.microsoft.com/en-us/training/paths/create-manage-model-driven-apps/)
 - [Advanced Model-Driven Apps with Power Apps: Configuration, Customization, and Deployment Techniques](https://learn.microsoft.com/en-us/training/paths/advanced-model-driven-apps-configuration-customization-deployment/)
 - [Dataverse Web API](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/overview)
