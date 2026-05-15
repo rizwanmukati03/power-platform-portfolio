@@ -30,6 +30,7 @@ documented projects that solve actual business problems.
 
 ## 📚 Learning From
 - [Microsoft Learn](https://learn.microsoft.com)
+- [[Microsoft Learn Credentials](https://learn.microsoft.com/en-us/credentials/)
 
 ## 📬 Contact
 - LinkedIn: [paste your LinkedIn link here]
