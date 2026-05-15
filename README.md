@@ -32,5 +32,8 @@ documented projects that solve actual business problems.
 - [Microsoft Learn](https://learn.microsoft.com)
 - [Microsoft Learn Credentials](https://learn.microsoft.com/en-us/credentials/)
 
+## 📚 Important links
+- [Training Dynamics365](https://learn.microsoft.com/en-us/training/dynamics365/)
+
 ## 📬 Contact
 - LinkedIn: [paste your LinkedIn link here]
