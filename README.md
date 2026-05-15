@@ -45,6 +45,7 @@ documented projects that solve actual business problems.
 - [PL-200 - Microsoft Certified: Power Platform Functional Consultant Associate](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-functional-consultant-associate/?WT.mc_id=certposter_poster_wwl&practice-assessment-type=certification)
 - [PL-400 - Microsoft Certified: Power Platform Developer Associate](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/?practice-assessment-type=certification)
 - [Create a model-driven application in Power Apps](https://learn.microsoft.com/en-us/training/paths/create-app-models-business-processes/)
+- [Demonstrate the capabilities of Microsoft Power Apps](https://learn.microsoft.com/en-us/training/paths/demonstrate-capabilities-power-apps/)
 
 
 
