@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sequential Learning Path — Power Platform to D365</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f9f8f5;
+  --bg2:#f0ede6;
+  --bg3:#e6e2d8;
+  --surface:#ffffff;
+  --border:#ddd9ce;
+  --border2:#c8c3b5;
+  --ink:#1a1916;
+  --dim:#6b6760;
+  --faint:#9e9a90;
+
+  --step1:#1d4ed8;  --step1l:#eff6ff;  --step1b:#bfdbfe;
+  --step2:#7c3aed;  --step2l:#f5f3ff;  --step2b:#ddd6fe;
+  --step3:#0369a1;  --step3l:#f0f9ff;  --step3b:#bae6fd;
+  --step4:#065f46;  --step4l:#ecfdf5;  --step4b:#a7f3d0;
+  --step5:#92400e;  --step5l:#fffbeb;  --step5b:#fde68a;
+  --step6:#881337;  --step6l:#fff1f2;  --step6b:#fecdd3;
+
+  --warn:#b45309;   --warn-bg:#fffbeb; --warn-border:#fde68a;
+  --danger:#b91c1c; --danger-bg:#fef2f2; --danger-border:#fecaca;
+  --ok:#065f46;     --ok-bg:#ecfdf5;   --ok-border:#a7f3d0;
+  --new:#4f46e5;    --new-bg:#eef2ff;  --new-border:#c7d2fe;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Outfit',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+
+/* ── PAGE ── */
+.page{max-width:860px;margin:0 auto;padding:44px 20px 100px}
+
+/* ── HERO ── */
+.hero{margin-bottom:48px}
+.eyebrow{font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.hero h1{font-size:clamp(28px,5vw,46px);font-weight:800;line-height:1.1;margin-bottom:12px;color:var(--ink)}
+.hero h1 span{color:var(--step1)}
+.hero-sub{font-size:14px;color:var(--dim);max-width:580px;line-height:1.65;margin-bottom:24px}
+.rule{height:2px;background:var(--ink);margin-bottom:24px}
+
+/* ── ALERT BOXES ── */
+.alert{padding:12px 16px;border-radius:6px;font-size:13px;line-height:1.6;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
+.alert-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.alert-warn{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn)}
+.alert-danger{background:var(--danger-bg);border:1px solid var(--danger-border);color:var(--danger)}
+.alert-ok{background:var(--ok-bg);border:1px solid var(--ok-border);color:var(--ok)}
+.alert-new{background:var(--new-bg);border:1px solid var(--new-border);color:var(--new)}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:0;margin-bottom:36px;border-bottom:2px solid var(--ink);overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:9px 18px;font-family:'Fira Code',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;background:none;border:none;border-bottom:2px solid transparent;color:var(--dim);cursor:pointer;transition:all .2s;margin-bottom:-2px;white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:700}
+
+/* ── VIEWS ── */
+.view{display:none}
+.view.on{display:block;animation:up .3s ease both}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── STAGE ── */
+.stage{margin-bottom:32px;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface)}
+.stage-header{display:flex;align-items:flex-start;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;border-bottom:1px solid var(--border)}
+.stage-num{font-family:'Fira Code',monospace;font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px;flex-shrink:0;margin-top:3px;letter-spacing:.05em}
+.stage-titles{flex:1}
+.stage-main{font-size:17px;font-weight:700;margin-bottom:3px}
+.stage-sub{font-size:12px;color:var(--dim)}
+.stage-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.stage-cert{font-family:'Fira Code',monospace;font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px}
+.stage-time{font-family:'Fira Code',monospace;font-size:10px;color:var(--faint)}
+.stage-toggle{font-size:18px;color:var(--dim);transition:transform .3s}
+.stage.open .stage-toggle{transform:rotate(180deg)}
+.stage-body{display:none;padding:0 22px 22px}
+.stage.open .stage-body{display:block}
+
+/* ── RESOURCE ITEMS ── */
+.res-section{margin-top:18px}
+.res-section-label{font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:10px;padding-bottom:6px;border-bottom:1px dashed var(--border)}
+.res-list{display:grid;gap:6px}
+.res-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:6px;border:1px solid var(--border);background:var(--bg);transition:border-color .15s}
+.res-item:hover{border-color:var(--border2)}
+.res-item.retiring{background:var(--danger-bg);border-color:var(--danger-border)}
+.res-type{font-family:'Fira Code',monospace;font-size:9px;padding:2px 7px;border-radius:3px;flex-shrink:0;text-transform:uppercase;letter-spacing:.05em;font-weight:600;margin-top:2px;white-space:nowrap}
+.type-ms{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.type-yt{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.type-cert{background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe}
+.type-tool{background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+.type-doc{background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.type-pdf{background:#fdf4ff;color:#7e22ce;border:1px solid #e9d5ff}
+.type-retire{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+.res-content{flex:1}
+.res-title{font-size:13px;font-weight:500;margin-bottom:2px;color:var(--ink)}
+.res-title a{color:var(--ink);text-decoration:none}
+.res-title a:hover{color:var(--step1);text-decoration:underline}
+.res-desc{font-size:11px;color:var(--dim);line-height:1.5}
+.res-badge{display:inline-block;font-family:'Fira Code',monospace;font-size:9px;padding:1px 6px;border-radius:3px;margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
+.badge-must{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+.badge-new{background:var(--new-bg);color:var(--new);border:1px solid var(--new-border)}
+.badge-retire{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-border)}
+.badge-free{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-border)}
+
+/* ── CHECKLIST ── */
+.check-note{font-size:13px;color:var(--dim);line-height:1.65;margin-top:14px;padding:12px 14px;background:var(--bg2);border-radius:6px;border-left:3px solid var(--border2)}
+
+/* ── QUICK REF TABLE ── */
+.qr-table{width:100%;border-collapse:collapse}
+.qr-table th{font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);padding:8px 12px;text-align:left;border-bottom:2px solid var(--ink);background:var(--bg)}
+.qr-table td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+.qr-table tr:hover td{background:var(--bg2)}
+.qr-table tr:last-child td{border-bottom:none}
+.qr-code{font-family:'Fira Code',monospace;font-size:12px;font-weight:700}
+.qr-status{font-family:'Fira Code',monospace;font-size:9px;padding:2px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.qs-ok{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-border)}
+.qs-warn{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-border)}
+.qs-new{background:var(--new-bg);color:var(--new);border:1px solid var(--new-border)}
+.qs-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+
+/* ── PROGRESS ── */
+.progress-track{background:var(--bg3);border-radius:4px;height:8px;overflow:hidden;margin-bottom:4px}
+.progress-fill{height:100%;border-radius:4px;transition:width .6s ease}
+
+/* ── START BOX ── */
+.start-box{background:var(--ink);color:var(--bg);border-radius:10px;padding:32px;text-align:center;margin-top:44px}
+.start-box h3{font-size:24px;font-weight:800;margin-bottom:8px}
+.start-box p{font-size:13px;color:var(--border2);margin-bottom:22px;line-height:1.6}
+.start-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn-light{padding:10px 20px;background:var(--bg);color:var(--ink);border-radius:6px;font-family:'Fira Code',monospace;font-size:11px;font-weight:700;text-decoration:none;transition:all .2s;text-transform:uppercase;letter-spacing:.05em}
+.btn-light:hover{background:#fff;transform:translateY(-2px)}
+.btn-ghost{padding:10px 20px;background:transparent;color:var(--bg);border-radius:6px;font-family:'Fira Code',monospace;font-size:11px;border:1px solid rgba(255,255,255,0.25);text-decoration:none;transition:all .2s;text-transform:uppercase;letter-spacing:.05em}
+.btn-ghost:hover{border-color:var(--bg)}
+
+.divider{height:1px;background:var(--border);margin:24px 0}
+
+@media(max-width:580px){.stage-right{display:none}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="eyebrow">Sequential Learning Path — No Hopping — May 2026</div>
+  <h1>Learn in <span>Order.</span><br>Zero Confusion.</h1>
+  <div class="rule"></div>
+  <p class="hero-sub">All your compiled links arranged sequentially — the exact order to follow without jumping around. Missing resources added. Retiring certs flagged. Supplemental YouTube marked at each step.</p>
+</div>
+
+<!-- CRITICAL ALERTS -->
+<div class="alert alert-danger">
+  <div class="alert-icon">🚨</div>
+  <div><strong>PL-200 retires August 31, 2026.</strong> You are starting fresh — go directly to AB-410 instead. The knowledge content of PL-200 is still worth studying (model-driven apps, Power Automate, Dataverse) — but do not sit the PL-200 exam. Sit AB-410 instead when it goes live June 2026.</div>
+</div>
+<div class="alert alert-warn">
+  <div class="alert-icon">⚠️</div>
+  <div><strong>Applied Skills: Create and manage model-driven apps</strong> — retires June 30, 2026. Skip the applied skills exam. Use the learning path content freely but target PL-400 as your cert.</div>
+</div>
+<div class="alert alert-ok">
+  <div class="alert-icon">✅</div>
+  <div><strong>Everything else in your list is valid.</strong> AZ-900, PL-900, PL-400, MB-230 — all active and safe to study and sit.</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab on" onclick="showTab('path',this)">Sequential Path</button>
+  <button class="tab" onclick="showTab('quickref',this)">Quick Reference</button>
+  <button class="tab" onclick="showTab('youtube',this)">YouTube Guide</button>
+  <button class="tab" onclick="showTab('missing',this)">What Was Missing</button>
+</div>
+
+<!-- ═══ SEQUENTIAL PATH ═══ -->
+<div class="view on" id="view-path">
+
+  <!-- STAGE 1 -->
+  <div class="stage" id="s1">
+    <div class="stage-header" onclick="tog('s1')">
+      <span class="stage-num" style="background:var(--step1l);color:var(--step1)">Stage 1</span>
+      <div class="stage-titles">
+        <div class="stage-main">Azure + Power Platform Foundations</div>
+        <div class="stage-sub">Start here. No prerequisites. These two certs unlock everything.</div>
+      </div>
+      <div class="stage-right">
+        <span class="stage-cert" style="background:var(--step1l);color:var(--step1)">AZ-900 + PL-900</span>
+        <span class="stage-time">Month 1–2</span>
+        <span class="stage-toggle">▾</span>
+      </div>
+    </div>
+    <div class="stage-body">
+      <div class="res-section">
+        <div class="res-section-label">Step 1.1 — Azure Fundamentals (Month 1)</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-cert">Cert</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification" target="_blank">AZ-900 — Microsoft Certified: Azure Fundamentals</a></div>
+              <div class="res-desc">Cloud concepts, Azure architecture, core services, security basics, pricing. Study the Microsoft Learn path + watch John Savill. Sit exam end of Month 1.</div>
+              <span class="res-badge badge-must">Cannot avoid</span>
+              <span class="res-badge badge-free">Free learning</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@NTFAQGuy" target="_blank">John Savill — AZ-900 Complete Study Cram</a></div>
+              <div class="res-desc">Search "AZ-900 study cram" on his channel. Best single video for exam prep. Watch alongside Microsoft Learn.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Practice</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.examtopics.com/exams/microsoft/az-900/" target="_blank">ExamTopics AZ-900 — Free Practice Questions</a></div>
+              <div class="res-desc">Score 80%+ consistently before booking exam. Do not book until you hit this score.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 1.2 — Power Platform Fundamentals (Month 2)</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-cert">Cert</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/credentials/certifications/power-platform-fundamentals/?practice-assessment-type=certification" target="_blank">PL-900 — Microsoft Certified: Power Platform Fundamentals</a></div>
+              <div class="res-desc">Power Apps, Power Automate, Power BI, Copilot Studio, Dataverse overview. Being refreshed June 2026 — still sit it, content updated not retired. Your Lisa Crosbie and Shane Young resources apply directly here.</div>
+              <span class="res-badge badge-must">Cannot avoid</span>
+              <span class="res-badge badge-new">Refreshed Jun 2026</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@LisaCrosbie" target="_blank">Lisa Crosbie — Power Platform Fundamentals Overview</a></div>
+              <div class="res-desc">5x Microsoft MVP. Search "PL-900" on her channel. Excellent for visual learners. Covers Copilot Studio which is now part of the refreshed PL-900.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@ShaneYoungCloud" target="_blank">Shane Young — Power Platform 201 (your compiled resource)</a></div>
+              <div class="res-desc">Microsoft MVP since 2005. Practical hands-on Power Apps and Power Automate walkthroughs. Use alongside PL-900 Microsoft Learn path.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/paths/demonstrate-capabilities-power-apps/" target="_blank">Learning Path — Demonstrate the capabilities of Microsoft Power Apps</a></div>
+              <div class="res-desc">Your compiled link — use this as part of PL-900 prep. Covers canvas apps, model-driven apps overview, and Dataverse basics at introductory level.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="check-note">✅ After Stage 1: You have AZ-900 and PL-900 certified. You understand cloud basics and the Power Platform ecosystem. You are ready to go deeper. Do not move to Stage 2 without both certs done.</div>
+    </div>
+  </div>
+
+  <!-- STAGE 2 -->
+  <div class="stage" id="s2">
+    <div class="stage-header" onclick="tog('s2')">
+      <span class="stage-num" style="background:var(--step2l);color:var(--step2)">Stage 2</span>
+      <div class="stage-titles">
+        <div class="stage-main">Power BI + Data Visualisation</div>
+        <div class="stage-sub">Quick win cert. Every D365 project needs reporting. 3 weeks, high return.</div>
+      </div>
+      <div class="stage-right">
+        <span class="stage-cert" style="background:var(--step2l);color:var(--step2)">PL-300</span>
+        <span class="stage-time">Month 3</span>
+        <span class="stage-toggle">▾</span>
+      </div>
+    </div>
+    <div class="stage-body">
+      <div class="res-section">
+        <div class="res-section-label">Step 2.1 — Power BI from scratch to certification</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-cert">Cert</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/credentials/certifications/power-bi-data-analyst/?practice-assessment-type=certification" target="_blank">PL-300 — Microsoft Certified: Power BI Data Analyst Associate</a></div>
+              <div class="res-desc">Data connections, Power Query, DAX formulas, reports, dashboards, Row Level Security, Power BI Service. Active cert — not retiring.</div>
+              <span class="res-badge badge-free">Free learning</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@GuyInACube" target="_blank">Guy in a Cube — Best free Power BI YouTube channel globally</a></div>
+              <div class="res-desc">Patrick and Adam cover everything from beginner DAX to advanced Power BI Service features. Watch their PL-300 prep playlist specifically.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Tool</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://powerbi.microsoft.com/downloads/" target="_blank">Power BI Desktop — Free Download</a></div>
+              <div class="res-desc">Install this immediately. You cannot learn Power BI without using it. Build real dashboards from Kaggle public datasets while studying.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Datasets</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.kaggle.com/datasets" target="_blank">Kaggle Datasets — Real public data to practice with</a></div>
+              <div class="res-desc">Download a sales or HR dataset. Build a complete Power BI dashboard. This hands-on project goes on your GitHub portfolio.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="check-note">✅ After Stage 2: PL-300 certified. You can build real Power BI dashboards. Add your dashboard project to GitHub. This is already a CV asset.</div>
+    </div>
+  </div>
+
+  <!-- STAGE 3 -->
+  <div class="stage" id="s3">
+    <div class="stage-header" onclick="tog('s3')">
+      <span class="stage-num" style="background:var(--step3l);color:var(--step3)">Stage 3</span>
+      <div class="stage-titles">
+        <div class="stage-main">Dataverse + Model-Driven Apps</div>
+        <div class="stage-sub">Foundation of D365. Master this before PL-400 — everything connects here.</div>
+      </div>
+      <div class="stage-right">
+        <span class="stage-cert" style="background:var(--step3l);color:var(--step3)">Pre-PL-400</span>
+        <span class="stage-time">Month 3–4</span>
+        <span class="stage-toggle">▾</span>
+      </div>
+    </div>
+    <div class="stage-body">
+      <div class="alert alert-ok" style="margin-top:12px">
+        <div class="alert-icon">💡</div>
+        <div>This stage has no exam — it is pure knowledge building. D365 Sales and Customer Service ARE model-driven apps built on Dataverse. Learn this and you understand D365 from the inside. Follow these resources in exact order.</div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 3.1 — Dataverse First (before model-driven apps)</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/paths/get-started-cds/" target="_blank">Learning Path — Discover Dataverse (not in your compiled list — MISSING)</a></div>
+              <div class="res-desc">Tables, columns, relationships, environments, security roles, business rules. Do this FIRST before any model-driven app work. This is the foundation.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-new">Was missing from your list</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/paths/work-with-dataverse/" target="_blank">Learning Path — Work with Dataverse (not in your compiled list — MISSING)</a></div>
+              <div class="res-desc">Creating custom tables, 1:N and N:N relationships, calculated columns, rollup fields, views. Do this second.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-new">Was missing from your list</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Practice</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://make.powerapps.com" target="_blank">Power Apps Developer Account — Free environment at make.powerapps.com</a></div>
+              <div class="res-desc">Sign up free. Create a custom table. Add columns. Create a relationship. Set up a business rule. Do this while studying Dataverse — read then immediately do.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-must">Essential tool</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 3.2 — Build Your First Model-Driven App</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/paths/create-app-models-business-processes/" target="_blank">Learning Path — Create a model-driven application in Power Apps (your link)</a></div>
+              <div class="res-desc">Forms, views, charts, dashboards in model-driven apps. Your compiled link — use this after completing Dataverse steps above.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/paths/create-manage-model-driven-apps/" target="_blank">Learning Path — Create and manage model-driven apps with Power Apps and Dataverse (your link)</a></div>
+              <div class="res-desc">Guided project format — hands-on interactive practice with real scenarios. Do this after the previous path. Closest thing to an exam lab for free.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-warn">Applied Skills retiring Jun 2026 — use as learning only</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@LisaCrosbie" target="_blank">Lisa Crosbie — Model-Driven Apps playlist (your compiled resource)</a></div>
+              <div class="res-desc">Search "model driven apps" on her channel. She has a dedicated playlist. Watch these alongside the Microsoft Learn paths above — not before.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@RezaDorrani" target="_blank">Reza Dorrani — Model-Driven Apps technical (your compiled resource)</a></div>
+              <div class="res-desc">More technical than Lisa. Covers customisation, business process flows, and Dataverse integration. Watch after Lisa for depth.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 3.3 — Advanced Model-Driven Apps</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/paths/advanced-model-driven-apps-configuration-customization-deployment/" target="_blank">Learning Path — Advanced Model-Driven Apps: Configuration, Customization, Deployment (your link)</a></div>
+              <div class="res-desc">Enterprise app configuration, complex forms with business logic, specialised controls, deployment techniques. Do this last in the model-driven sequence.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/modules/use-services-model-driven-apps/" target="_blank">Module — Use Microsoft 365 services with model-driven apps and Dataverse (your link)</a></div>
+              <div class="res-desc">Integrating email, document management, server-side sync with D365 model-driven apps. Shows how D365 connects to the broader Microsoft ecosystem.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="check-note">✅ After Stage 3: You understand Dataverse deeply. You can build, configure, and deploy model-driven apps. You now understand how D365 works under the hood. This knowledge is the foundation of everything in PL-400.</div>
+    </div>
+  </div>
+
+  <!-- STAGE 4 -->
+  <div class="stage" id="s4">
+    <div class="stage-header" onclick="tog('s4')">
+      <span class="stage-num" style="background:var(--step4l);color:var(--step4)">Stage 4</span>
+      <div class="stage-titles">
+        <div class="stage-main">Power Platform Developer — PL-400</div>
+        <div class="stage-sub">Your C# advantage. The cert that separates you from 80% of candidates.</div>
+      </div>
+      <div class="stage-right">
+        <span class="stage-cert" style="background:var(--step4l);color:var(--step4)">PL-400 ⭐</span>
+        <span class="stage-time">Month 4–5</span>
+        <span class="stage-toggle">▾</span>
+      </div>
+    </div>
+    <div class="stage-body">
+      <div class="alert alert-new" style="margin-top:12px">
+        <div class="alert-icon">💡</div>
+        <div><strong>Note on PL-200 in your list:</strong> PL-200 retires August 31, 2026. Since you are on the developer track (PL-400), PL-200 was not in your roadmap anyway — but the learning content overlaps significantly. Everything PL-200 taught about functional consulting is now covered by the AB-410 path. Skip PL-200 entirely.</div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 4.1 — Credential Journey Reference (understand the map)</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-pdf">PDF</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://arch-center.azureedge.net/Credentials/Credential-Journey-Power-Platform-Functional-Consultant.pdf" target="_blank">Microsoft Credential Journey — Power Platform (your compiled PDF)</a></div>
+              <div class="res-desc">Use this as a map reference only. Note: it shows PL-200 which is retiring. Your actual path follows PL-900 → PL-400 → AB-410 → AB-100. Useful for understanding how certs connect.</div>
+              <span class="res-badge badge-warn">Reference only — PL-200 retiring</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 4.2 — PL-400 Core Certification Path</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-cert">Cert</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/?practice-assessment-type=certification" target="_blank">PL-400 — Microsoft Certified: Power Platform Developer Associate (your link)</a></div>
+              <div class="res-desc">C# plugins, PCF controls, Dataverse Web API, custom connectors, Azure Functions integration, ALM with Power Platform CLI. Active cert — not retiring. This is your most important cert.</div>
+              <span class="res-badge badge-must">Cannot avoid</span>
+              <span class="res-badge badge-free">Free learning path</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 4.3 — C# Plugin Development (your key differentiator)</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-doc">Docs</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/power-apps/developer/data-platform/plug-ins" target="_blank">C# Plugin Development with Dataverse (your compiled link)</a></div>
+              <div class="res-desc">Official Microsoft plugin development guide. Plugin pipeline, pre/post operation stages, IOrganizationService, tracing service. Read every single page. This is where your C# background pays off.</div>
+              <span class="res-badge badge-must">Critical — read fully</span>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-doc">Docs</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/overview" target="_blank">Dataverse Web API (your compiled link)</a></div>
+              <div class="res-desc">Querying and manipulating Dataverse data using REST API from C# code. Use alongside plugin development. Test every API call in Postman first.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Tool</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://aka.ms/PowerAppsCLI" target="_blank">Power Apps CLI (pac CLI) — Free download (MISSING from your list)</a></div>
+              <div class="res-desc">Command line tool for Dataverse solution management and deployment. Every professional D365 developer uses this. Install alongside Visual Studio. Essential for PL-400.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-new">Was missing from your list</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@RezaDorrani" target="_blank">Reza Dorrani — PL-400 Technical Deep Dives (your compiled resource)</a></div>
+              <div class="res-desc">Best YouTube channel specifically for PL-400 technical content. Watch his plugin development, PCF controls, and Dataverse API playlists. Use alongside the Microsoft docs above.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Paid</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.udemy.com" target="_blank">Scott Duffy — PL-400 on Udemy (~$12 on sale)</a></div>
+              <div class="res-desc">Search "PL-400 Scott Duffy" on Udemy. Buy only when on sale. Comprehensive video course covering all PL-400 exam topics. Worth the $12.</div>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Practice</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.examtopics.com/exams/microsoft/pl-400/" target="_blank">ExamTopics PL-400 — Free Practice Questions (MISSING from your list)</a></div>
+              <div class="res-desc">Score 80%+ before booking. PL-400 is harder than PL-900 and PL-300. Practice tests are essential — not optional.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-new">Was missing from your list</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="check-note">✅ After Stage 4: PL-300 + PL-400 certified. You can build Power BI dashboards, create C# plugins, design model-driven apps, work with Dataverse API. You are now job-ready at the developer level. Start building your portfolio project.</div>
+    </div>
+  </div>
+
+  <!-- STAGE 5 -->
+  <div class="stage" id="s5">
+    <div class="stage-header" onclick="tog('s5')">
+      <span class="stage-num" style="background:var(--step5l);color:var(--step5)">Stage 5</span>
+      <div class="stage-titles">
+        <div class="stage-main">Dynamics 365 CE Knowledge</div>
+        <div class="stage-sub">No exam for most of this — pure knowledge. D365 IS a model-driven app. Now you will see it.</div>
+      </div>
+      <div class="stage-right">
+        <span class="stage-cert" style="background:var(--step5l);color:var(--step5)">AB-900 + AB-210</span>
+        <span class="stage-time">Month 6–8</span>
+        <span class="stage-toggle">▾</span>
+      </div>
+    </div>
+    <div class="stage-body">
+      <div class="res-section">
+        <div class="res-section-label">Step 5.1 — D365 Platform Overview (start here)</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/dynamics365/" target="_blank">Training Dynamics365 — Main hub (your compiled link)</a></div>
+              <div class="res-desc">Start here. Get the big picture of the entire D365 platform — how all apps relate to each other. Read the overview before drilling into individual apps.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 5.2 — D365 CE Apps in Order</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/dynamics365/sales" target="_blank">D365 Sales Learning Hub (your compiled link)</a></div>
+              <div class="res-desc">Leads, opportunities, quotes, orders, forecasting, AI seller tools. Study this first — it is the primary workload for AB-210. Practice in the free D365 trial: create lead → qualify → opportunity → quote → close.</div>
+              <span class="res-badge badge-must">Primary for AB-210</span>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/dynamics365/customer-service" target="_blank">D365 Customer Service Learning Hub (your compiled link)</a></div>
+              <div class="res-desc">Cases, queues, SLAs, entitlements, knowledge base, routing. Study second. Practice in free trial: create case → route → resolve → link knowledge article. Essential for MB-230 later.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/dynamics365/customer-insights-journeys" target="_blank">D365 Customer Insights — Journeys (your compiled link)</a></div>
+              <div class="res-desc">Marketing journeys, segments, emails. Overview level only — you do not need deep expertise here. Read enough to speak intelligently in interviews.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/dynamics365/field-service" target="_blank">D365 Field Service Learning Hub (your compiled link)</a></div>
+              <div class="res-desc">Work orders, scheduling, IoT integration. Overview level — useful context. Not your primary focus but good to understand.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Practice</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.microsoft.com/en-us/dynamics-365/free-trial" target="_blank">Dynamics 365 Free Trial — 30 days (your compiled link)</a></div>
+              <div class="res-desc">Open this alongside every D365 learning path. Read a concept — immediately do it in the trial. This is non-negotiable. Theory without practice does not stick and does not impress in interviews.</div>
+              <span class="res-badge badge-must">Non-negotiable practice</span>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@MeganVWalker" target="_blank">Megan V Walker — D365 CE Functional Scenarios (MISSING from your list)</a></div>
+              <div class="res-desc">Microsoft MVP. Covers D365 Sales and Customer Service from a real consultant's perspective. Shows real business scenarios not just feature walkthroughs. Essential for interview preparation.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-new">Was missing from your list</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-yt">YouTube</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.youtube.com/@MicrosoftDynamics365" target="_blank">Microsoft Dynamics 365 Official YouTube (MISSING from your list)</a></div>
+              <div class="res-desc">Official product walkthroughs, Copilot feature demos, new release videos. Use to stay current on D365 AI features which are being added monthly in 2026.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-new">Was missing from your list</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 5.3 — Certifications for this stage</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-cert">Cert</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/credentials/certifications/" target="_blank">AB-900 — Copilot & Agent Administration Fundamentals (Month 6)</a></div>
+              <div class="res-desc">New cert live February 2026. Covers Copilot Studio, Microsoft 365 Copilot, Power Platform AI, D365 Copilot. Tests AI-era fundamentals that underpin all D365 work now. Study Microsoft Learn AB-900 path.</div>
+              <span class="res-badge badge-new">Live Feb 2026</span>
+              <span class="res-badge badge-free">Free learning</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-cert">Cert</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/credentials/certifications/" target="_blank">AB-210 — D365 Sales AI Consultant Associate (Month 7–8)</a></div>
+              <div class="res-desc">Replaces MB-280. D365 Sales + Copilot + AI agents + sales automation. Live June 2026. New cert — very few holders currently. This is your core D365 CE credential for 2026. Study the AB-210 Microsoft Learn path when published.</div>
+              <span class="res-badge badge-new">Live Jun 2026</span>
+              <span class="res-badge badge-must">Core D365 credential</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="check-note">✅ After Stage 5: AB-900 + AB-210 certified. You understand D365 Sales, Customer Service, and the Copilot AI layer across all apps. You have hands-on trial experience. Combined with PL-400, you are now a strong applicant for Power Platform + D365 Developer roles.</div>
+    </div>
+  </div>
+
+  <!-- STAGE 6 -->
+  <div class="stage" id="s6">
+    <div class="stage-header" onclick="tog('s6')">
+      <span class="stage-num" style="background:var(--step6l);color:var(--step6)">Stage 6</span>
+      <div class="stage-titles">
+        <div class="stage-main">D365 Customer Service Cert + First Job</div>
+        <div class="stage-sub">MB-230 while working. Portfolio project. Applications. Relocation.</div>
+      </div>
+      <div class="stage-right">
+        <span class="stage-cert" style="background:var(--step6l);color:var(--step6)">MB-230 + JOB</span>
+        <span class="stage-time">Month 8–15</span>
+        <span class="stage-toggle">▾</span>
+      </div>
+    </div>
+    <div class="stage-body">
+      <div class="res-section">
+        <div class="res-section-label">Step 6.1 — Portfolio Project (Month 8–9)</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-tool">Build</span>
+            <div class="res-content">
+              <div class="res-title">Enterprise CRM Portfolio Project — GitHub (MISSING — no link needed, just do it)</div>
+              <div class="res-desc">Model-driven app + C# plugin + Power Automate workflow + Power BI dashboard + GitHub Actions ALM pipeline. Push to GitHub publicly. Record 5-min video. Post on LinkedIn. This is your job application weapon.</div>
+              <span class="res-badge badge-must">Non-negotiable</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="res-section">
+        <div class="res-section-label">Step 6.2 — MB-230 Customer Service Cert (Year 2 — while working)</div>
+        <div class="res-list">
+          <div class="res-item">
+            <span class="res-type type-cert">Cert</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/credentials/certifications/exams/mb-230/" target="_blank">MB-230 — Dynamics 365 Customer Service Functional Consultant (your compiled link)</a></div>
+              <div class="res-desc">Active cert — not retiring. Cases, queues, SLAs, entitlements, routing, knowledge base, omnichannel, Copilot for Customer Service. Sit this AFTER you start working — real project experience makes it significantly easier and faster to pass. AB-210 = Sales, MB-230 = Customer Service. Together = complete CE consultant.</div>
+              <span class="res-badge badge-new">Active — study after first job</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-ms">Microsoft Learn</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://learn.microsoft.com/en-us/training/dynamics365/customer-service" target="_blank">D365 Customer Service hub — revisit for MB-230 prep (your link)</a></div>
+              <div class="res-desc">You studied this in Stage 5 for knowledge. Now revisit it specifically for MB-230 exam prep — go deeper into SLA configuration, routing rules, and Copilot CS features.</div>
+              <span class="res-badge badge-free">Free</span>
+            </div>
+          </div>
+          <div class="res-item">
+            <span class="res-type type-tool">Practice</span>
+            <div class="res-content">
+              <div class="res-title"><a href="https://www.examtopics.com/exams/microsoft/mb-230/" target="_blank">ExamTopics MB-230 Practice Questions (MISSING from your list)</a></div>
+              <div class="res-desc">Free practice questions for MB-230. Score 80%+ before booking. Watch for any retirement announcement on the MB-230 exam page before sitting.</div>
+              <span class="res-badge badge-free">Free</span>
+              <span class="res-badge badge-new">Was missing from your list</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="check-note">✅ After Stage 6: Portfolio project on GitHub. First job abroad secured (Month 12–15). MB-230 complete or in progress. You are now in UAE or Germany earning 5–7x your Pakistan salary. Azure architecture study begins in evenings.</div>
+    </div>
+  </div>
+
+  <div class="start-box">
+    <h3>Start Stage 1 today.</h3>
+    <p>Open AZ-900 Microsoft Learn. Complete Module 1 — Cloud Concepts.<br>45 minutes. That is your only task right now.</p>
+    <div class="start-btns">
+      <a class="btn-light" href="https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification" target="_blank">Open AZ-900 →</a>
+      <a class="btn-ghost" href="https://make.powerapps.com" target="_blank">Free Power Apps Env</a>
+      <a class="btn-ghost" href="https://www.microsoft.com/en-us/dynamics-365/free-trial" target="_blank">D365 Free Trial</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ QUICK REF ═══ -->
+<div class="view" id="view-quickref">
+  <div style="overflow-x:auto;border:1.5px solid var(--border);border-radius:8px">
+  <table class="qr-table">
+    <thead><tr><th>Order</th><th>Code</th><th>Name</th><th>Stage</th><th>When</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">01</td><td><span class="qr-code" style="color:var(--step1)">AZ-900</span></td><td>Azure Fundamentals</td><td style="font-size:11px;color:var(--dim)">Stage 1</td><td style="font-family:'Fira Code',monospace;font-size:11px">Month 1</td><td><span class="qr-status qs-ok">Active</span></td></tr>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">02</td><td><span class="qr-code" style="color:var(--step1)">PL-900</span></td><td>Power Platform Fundamentals</td><td style="font-size:11px;color:var(--dim)">Stage 1</td><td style="font-family:'Fira Code',monospace;font-size:11px">Month 2</td><td><span class="qr-status qs-new">Refreshed Jun 2026</span></td></tr>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">03</td><td><span class="qr-code" style="color:var(--step2)">PL-300</span></td><td>Power BI Data Analyst</td><td style="font-size:11px;color:var(--dim)">Stage 2</td><td style="font-family:'Fira Code',monospace;font-size:11px">Month 3</td><td><span class="qr-status qs-ok">Active</span></td></tr>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">04</td><td><span class="qr-code" style="color:var(--faint)">—</span></td><td>Dataverse + Model-Driven Apps (knowledge)</td><td style="font-size:11px;color:var(--dim)">Stage 3</td><td style="font-family:'Fira Code',monospace;font-size:11px">Month 3–4</td><td><span class="qr-status qs-ok">No exam — learning</span></td></tr>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">05</td><td><span class="qr-code" style="color:var(--step4)">PL-400</span></td><td>Power Platform Developer Associate</td><td style="font-size:11px;color:var(--dim)">Stage 4</td><td style="font-family:'Fira Code',monospace;font-size:11px">Month 4–5</td><td><span class="qr-status qs-ok">Active</span></td></tr>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">06</td><td><span class="qr-code" style="color:var(--faint)">—</span></td><td>D365 CE Apps Knowledge (Sales, CS, Field Service)</td><td style="font-size:11px;color:var(--dim)">Stage 5</td><td style="font-family:'Fira Code',monospace;font-size:11px">Month 6</td><td><span class="qr-status qs-ok">No exam — learning</span></td></tr>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">07</td><td><span class="qr-code" style="color:var(--step5)">AB-900</span></td><td>Copilot & Agent Administration Fundamentals</td><td style="font-size:11px;color:var(--dim)">Stage 5</td><td style="font-family:'Fira Code',monospace;font-size:11px">Month 6</td><td><span class="qr-status qs-new">Live Feb 2026</span></td></tr>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">08</td><td><span class="qr-code" style="color:var(--step5)">AB-210</span></td><td>D365 Sales AI Consultant Associate</td><td style="font-size:11px;color:var(--dim)">Stage 5</td><td style="font-family:'Fira Code',monospace;font-size:11px">Month 7–8</td><td><span class="qr-status qs-new">Live Jun 2026</span></td></tr>
+      <tr><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">09</td><td><span class="qr-code" style="color:var(--step6)">MB-230</span></td><td>D365 Customer Service Functional Consultant</td><td style="font-size:11px;color:var(--dim)">Stage 6</td><td style="font-family:'Fira Code',monospace;font-size:11px">Year 2</td><td><span class="qr-status qs-ok">Active — watch for retirement</span></td></tr>
+      <tr style="background:var(--danger-bg)"><td style="font-family:'Fira Code',monospace;font-size:11px;color:var(--faint)">❌</td><td><span class="qr-code" style="color:var(--danger)">PL-200</span></td><td>Power Platform Functional Consultant (in your list)</td><td style="font-size:11px;color:var(--dim)">Skipped</td><td style="font-family:'Fira Code',monospace;font-size:11px">N/A</td><td><span class="qr-status qs-danger">Retires Aug 2026 — skip</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="alert alert-warn" style="margin-top:16px">
+    <div class="alert-icon">⚠️</div>
+    <div><strong>PL-200 was in your compiled list</strong> — this cert retires August 31, 2026 and is replaced by AB-410. Since you are on the developer track (PL-400), you were not targeting PL-200 anyway. The learning content overlaps with what AB-410 will cover. Remove PL-200 from your active list.</div>
+  </div>
+</div>
+
+<!-- ═══ YOUTUBE GUIDE ═══ -->
+<div class="view" id="view-youtube">
+  <div class="alert alert-ok">
+    <div class="alert-icon">🎯</div>
+    <div>Use YouTube alongside Microsoft Learn — not instead of it. Watch a video, then immediately go hands-on in make.powerapps.com or the D365 trial. Never watch more than one video before practising.</div>
+  </div>
+  <div style="margin-top:20px;display:grid;gap:12px">
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:18px 20px">
+      <div style="font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:12px">Stage 1 — Azure + Power Platform Basics</div>
+      <div style="display:grid;gap:8px">
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">John Savill</strong> — <a href="https://www.youtube.com/@NTFAQGuy" target="_blank" style="color:var(--step1);font-size:13px">@NTFAQGuy</a><div style="font-size:12px;color:var(--dim);margin-top:2px">Use for: AZ-900 study cram, AZ-104, AZ-305. Search the specific cert name on his channel. Best technical Azure content on YouTube.</div></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Shane Young</strong> — <a href="https://www.youtube.com/@ShaneYoungCloud" target="_blank" style="color:var(--step1);font-size:13px">@ShaneYoungCloud</a><div style="font-size:12px;color:var(--dim);margin-top:2px">Use for: PL-900, Power Apps Canvas, Power Automate. His Power Apps 201 course (your compiled resource) is excellent for PL-900 prep.</div></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Lisa Crosbie</strong> — <a href="https://www.youtube.com/@LisaCrosbie" target="_blank" style="color:var(--step1);font-size:13px">@LisaCrosbie</a><div style="font-size:12px;color:var(--dim);margin-top:2px">Use for: PL-900, Copilot Studio, D365 Copilot features, model-driven apps. 5x Microsoft MVP. Her 2026 content covers AI features extensively.</div></div></div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:18px 20px">
+      <div style="font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:12px">Stage 2 — Power BI</div>
+      <div style="display:grid;gap:8px">
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Guy in a Cube</strong> — <a href="https://www.youtube.com/@GuyInACube" target="_blank" style="color:var(--step2);font-size:13px">@GuyInACube</a><div style="font-size:12px;color:var(--dim);margin-top:2px">Use for: PL-300 exam prep, DAX formulas, Power Query, Power BI Service. Watch their PL-300 playlist specifically. Best Power BI channel globally.</div></div></div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:18px 20px">
+      <div style="font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:12px">Stage 3 — Dataverse + Model-Driven Apps</div>
+      <div style="display:grid;gap:8px">
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Lisa Crosbie</strong> — Model-Driven Apps playlist<div style="font-size:12px;color:var(--dim);margin-top:2px">Search "model driven apps" on her channel. Dedicated playlist covers forms, views, business process flows. Watch AFTER Microsoft Learn paths.</div></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Reza Dorrani</strong> — <a href="https://www.youtube.com/@RezaDorrani" target="_blank" style="color:var(--step3);font-size:13px">@RezaDorrani</a><div style="font-size:12px;color:var(--dim);margin-top:2px">More technical than Lisa. Watch for advanced customisation, PCF controls, and Dataverse deep dives. Use for both Stage 3 and Stage 4.</div></div></div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:18px 20px">
+      <div style="font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:12px">Stage 4 — PL-400 Technical (C# plugins)</div>
+      <div style="display:grid;gap:8px">
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Reza Dorrani</strong> — PL-400 technical playlists<div style="font-size:12px;color:var(--dim);margin-top:2px">Best YouTube resource specifically for PL-400. His plugin development, PCF controls, and Dataverse API videos are essential. Watch alongside Microsoft plugin docs.</div></div></div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:18px 20px">
+      <div style="font-family:'Fira Code',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:12px">Stage 5 — D365 CE Knowledge</div>
+      <div style="display:grid;gap:8px">
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Megan V Walker</strong> — <a href="https://www.youtube.com/@MeganVWalker" target="_blank" style="color:var(--step5);font-size:13px">@MeganVWalker</a> ← was missing from your list<div style="font-size:12px;color:var(--dim);margin-top:2px">Microsoft MVP. D365 Sales and Customer Service from a real consultant perspective. Real business scenarios — essential for interview preparation.</div></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Microsoft Dynamics 365 Official</strong> — <a href="https://www.youtube.com/@MicrosoftDynamics365" target="_blank" style="color:var(--step5);font-size:13px">@MicrosoftDynamics365</a> ← was missing from your list<div style="font-size:12px;color:var(--dim);margin-top:2px">Official Microsoft channel. Product walkthroughs, Copilot demos, release wave updates. Watch monthly to stay current on new AI features being added to D365.</div></div></div>
+        <div style="display:flex;gap:10px;align-items:flex-start"><span style="font-size:18px">📺</span><div><strong style="font-size:13px">Lisa Crosbie</strong> — Copilot + D365 AI features<div style="font-size:12px;color:var(--dim);margin-top:2px">Her 2025–2026 videos specifically cover Copilot in D365 Sales and Customer Service — directly relevant to AB-210 and AB-900 content.</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MISSING ═══ -->
+<div class="view" id="view-missing">
+  <div class="alert alert-new">
+    <div class="alert-icon">📋</div>
+    <div>These resources were missing from your compiled list but are important. Some are critical — marked accordingly.</div>
+  </div>
+  <div style="margin-top:16px;display:grid;gap:10px">
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:16px 18px">
+      <div style="font-family:'Fira Code',monospace;font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Critical — must add</div>
+      <div style="display:grid;gap:8px">
+        <div class="res-item"><span class="res-type type-ms">Microsoft Learn</span><div class="res-content"><div class="res-title"><a href="https://learn.microsoft.com/en-us/training/paths/get-started-cds/" target="_blank">Discover Dataverse Learning Path</a></div><div class="res-desc">The absolute foundation before any model-driven app work. Tables, columns, relationships, environments, security. Do this before Stage 3.</div><span class="res-badge badge-must">Critical — was missing</span></div></div>
+        <div class="res-item"><span class="res-type type-ms">Microsoft Learn</span><div class="res-content"><div class="res-title"><a href="https://learn.microsoft.com/en-us/training/paths/work-with-dataverse/" target="_blank">Work with Dataverse Learning Path</a></div><div class="res-desc">Custom tables, advanced relationships, calculated columns, rollup fields. Do this after Discover Dataverse, before model-driven apps.</div><span class="res-badge badge-must">Critical — was missing</span></div></div>
+        <div class="res-item"><span class="res-type type-tool">Tool</span><div class="res-content"><div class="res-title"><a href="https://aka.ms/PowerAppsCLI" target="_blank">Power Apps CLI (pac CLI)</a></div><div class="res-desc">Command line tool every PL-400 developer needs. Install with Visual Studio. Used for solution deployment and ALM pipelines.</div><span class="res-badge badge-must">Critical for PL-400</span></div></div>
+        <div class="res-item"><span class="res-type type-tool">Practice</span><div class="res-content"><div class="res-title"><a href="https://www.examtopics.com/exams/microsoft/pl-400/" target="_blank">ExamTopics PL-400 Practice Questions</a></div><div class="res-desc">Free practice questions. PL-400 is harder than PL-900. You must practice before booking.</div><span class="res-badge badge-must">Critical — was missing</span></div></div>
+        <div class="res-item"><span class="res-type type-tool">Practice</span><div class="res-content"><div class="res-title"><a href="https://www.examtopics.com/exams/microsoft/mb-230/" target="_blank">ExamTopics MB-230 Practice Questions</a></div><div class="res-desc">Free practice questions for MB-230. Use in Year 2 before sitting the exam.</div><span class="res-badge badge-free">Free — was missing</span></div></div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:16px 18px">
+      <div style="font-family:'Fira Code',monospace;font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">YouTube channels that were missing</div>
+      <div style="display:grid;gap:8px">
+        <div class="res-item"><span class="res-type type-yt">YouTube</span><div class="res-content"><div class="res-title"><a href="https://www.youtube.com/@NTFAQGuy" target="_blank">John Savill — @NTFAQGuy</a></div><div class="res-desc">Essential for AZ-900, AZ-104, AZ-305. Best Azure YouTube channel globally. Was missing from your list entirely.</div><span class="res-badge badge-must">Was missing — add now</span></div></div>
+        <div class="res-item"><span class="res-type type-yt">YouTube</span><div class="res-content"><div class="res-title"><a href="https://www.youtube.com/@GuyInACube" target="_blank">Guy in a Cube — @GuyInACube</a></div><div class="res-desc">Essential for PL-300 Power BI. Best Power BI channel globally. Was missing from your list.</div><span class="res-badge badge-must">Was missing — add now</span></div></div>
+        <div class="res-item"><span class="res-type type-yt">YouTube</span><div class="res-content"><div class="res-title"><a href="https://www.youtube.com/@MeganVWalker" target="_blank">Megan V Walker — @MeganVWalker</a></div><div class="res-desc">D365 CE functional consultant perspective. Real business scenarios. Essential for interview prep. Was missing.</div><span class="res-badge badge-new">Was missing — add</span></div></div>
+        <div class="res-item"><span class="res-type type-yt">YouTube</span><div class="res-content"><div class="res-title"><a href="https://www.youtube.com/@MicrosoftDynamics365" target="_blank">Microsoft Dynamics 365 Official</a></div><div class="res-desc">Official product demos and release wave content. Essential for staying current on Copilot + D365 AI features. Was missing.</div><span class="res-badge badge-new">Was missing — add</span></div></div>
+      </div>
+    </div>
+    <div style="background:var(--danger-bg);border:1.5px solid var(--danger-border);border-radius:8px;padding:16px 18px">
+      <div style="font-family:'Fira Code',monospace;font-size:10px;color:var(--danger);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">In your list but should be flagged</div>
+      <div style="display:grid;gap:8px">
+        <div class="res-item retiring"><span class="res-type type-retire">Retiring</span><div class="res-content"><div class="res-title">PL-200 — Power Platform Functional Consultant Associate</div><div class="res-desc">Retires August 31, 2026. Replaced by AB-410. Since you are on the developer track (PL-400), you were not targeting this anyway. Remove from your active list. The credential journey PDF showing PL-200 is already outdated.</div><span class="res-badge badge-retire">Do not sit — retires Aug 2026</span></div></div>
+        <div class="res-item retiring"><span class="res-type type-retire">Watch</span><div class="res-content"><div class="res-title">Applied Skills: Create and manage model-driven apps</div><div class="res-desc">This Applied Skills credential retires June 30, 2026. Use the learning path content freely — it is excellent. But do not target the Applied Skills exam. Target PL-400 instead which covers the same content at a deeper level.</div><span class="res-badge badge-retire">Use content only — skip exam</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page -->
+
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('view-'+id).classList.add('on');
+}
+function tog(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+// Auto-open stage 1
+document.getElementById('s1').classList.add('open');
+</script>
+</body>
+</html>

@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certification Career Ladder</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & TOKENS ─────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0e0e13;
+  --paper:#f4f1eb;
+  --paper2:#ede9e0;
+  --paper3:#e3ddd1;
+  --line:#c8c2b4;
+  --line2:#a89f8e;
+  --dim:#7a7266;
+  --must:#b5290e;       /* non-negotiable red */
+  --must-bg:#fff0ee;
+  --must-border:#e8c2bc;
+  --ess:#1a4d8f;        /* essential blue */
+  --ess-bg:#eef3fb;
+  --ess-border:#b8cef0;
+  --nice:#2e7d4f;       /* nice-to-have green */
+  --nice-bg:#edf7f1;
+  --nice-border:#b4ddc5;
+  --gold:#b07d10;
+  --gold-bg:#fdf7e8;
+  --r1:#7b2ff7;  /* role 1 - developer */
+  --r2:#0e6eb5;  /* role 2 - sr developer */
+  --r3:#0d7a5f;  /* role 3 - architect */
+  --r4:#b07d10;  /* role 4 - solution arch */
+  --r5:#8b1a8b;  /* role 5 - AI arch */
+  --r6:#b5290e;  /* role 6 - security arch */
+  --r7:#1a1916;  /* role 7 - senior/independent */
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  line-height:1.5;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* grain texture */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:999;
+}
+
+/* ─── LAYOUT ────────────────────────────────────── */
+.page{max-width:960px;margin:0 auto;padding:48px 20px 100px}
+
+/* ─── HERO ──────────────────────────────────────── */
+.hero{margin-bottom:56px;position:relative}
+.hero-eyebrow{
+  font-family:'Space Mono',monospace;
+  font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:14px;
+}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(48px,8vw,96px);
+  line-height:.95;
+  letter-spacing:.02em;
+  color:var(--ink);
+  margin-bottom:20px;
+}
+.hero h1 span{color:var(--ess)}
+.hero-sub{
+  font-size:15px;color:var(--dim);
+  max-width:520px;line-height:1.65;margin-bottom:28px;
+}
+.hero-rule{height:2px;background:var(--ink);margin-bottom:28px}
+
+/* legend */
+.legend{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;
+}
+.leg{
+  display:flex;align-items:center;gap:6px;
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:5px 12px;border-radius:3px;letter-spacing:.04em;
+  text-transform:uppercase;
+}
+.leg-must{background:var(--must-bg);color:var(--must);border:1.5px solid var(--must-border)}
+.leg-ess{background:var(--ess-bg);color:var(--ess);border:1.5px solid var(--ess-border)}
+.leg-nice{background:var(--nice-bg);color:var(--nice);border:1.5px solid var(--nice-border)}
+.leg-dot{width:8px;height:8px;border-radius:50%}
+
+/* ─── TABS ──────────────────────────────────────── */
+.tabs{
+  display:flex;gap:0;margin-bottom:40px;
+  border-bottom:2px solid var(--ink);overflow-x:auto;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tabBtn{
+  flex-shrink:0;padding:10px 20px;
+  font-family:'Space Mono',monospace;font-size:11px;
+  letter-spacing:.06em;text-transform:uppercase;
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--dim);cursor:pointer;
+  transition:all .2s;margin-bottom:-2px;white-space:nowrap;
+}
+.tabBtn:hover{color:var(--ink)}
+.tabBtn.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:700}
+
+/* ─── VIEWS ─────────────────────────────────────── */
+.view{display:none}
+.view.on{display:block;animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── ROLE BLOCKS ───────────────────────────────── */
+.role-block{
+  margin-bottom:32px;
+  border:1.5px solid var(--line);
+  border-radius:4px;
+  overflow:hidden;
+  background:#fff;
+  transition:border-color .2s;
+}
+.role-block:hover{border-color:var(--line2)}
+
+.role-header{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 24px;
+  border-bottom:1.5px solid var(--line);
+  cursor:pointer;
+  user-select:none;
+}
+.role-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:42px;line-height:1;
+  color:var(--line2);flex-shrink:0;width:44px;
+}
+.role-meta{flex:1}
+.role-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;line-height:1;letter-spacing:.03em;
+  margin-bottom:4px;
+}
+.role-sub{font-size:12px;color:var(--dim)}
+.role-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.role-badge{
+  font-family:'Space Mono',monospace;font-size:10px;
+  padding:2px 8px;border-radius:2px;
+  text-transform:uppercase;letter-spacing:.04em;
+}
+.role-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.role-salary{
+  font-family:'Space Mono',monospace;font-size:12px;
+  color:var(--ink);text-align:right;
+}
+.role-salary small{font-size:10px;color:var(--dim);display:block}
+.role-toggle{
+  width:28px;height:28px;border-radius:50%;
+  border:1.5px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--dim);
+  transition:transform .3s;flex-shrink:0;
+}
+.role-block.open .role-toggle{transform:rotate(180deg)}
+
+.role-body{display:none;padding:24px}
+.role-block.open .role-body{display:block}
+
+/* cert sections */
+.cert-section{margin-bottom:20px}
+.cert-section:last-child{margin-bottom:0}
+.cert-section-label{
+  font-family:'Space Mono',monospace;font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:12px;padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.cert-section-label span{font-weight:700}
+
+.certs-grid{display:grid;gap:8px}
+
+.cert-row{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 14px;border-radius:3px;
+  border:1px solid transparent;
+  transition:border-color .15s;
+}
+.cert-row:hover{border-color:var(--line)}
+.cert-row.must{background:var(--must-bg);border-color:var(--must-border)}
+.cert-row.ess{background:var(--ess-bg);border-color:var(--ess-border)}
+.cert-row.nice{background:var(--nice-bg);border-color:var(--nice-border)}
+
+.cert-code{
+  font-family:'Space Mono',monospace;font-size:11px;
+  font-weight:700;flex-shrink:0;width:60px;
+  padding-top:2px;
+}
+.cert-row.must .cert-code{color:var(--must)}
+.cert-row.ess .cert-code{color:var(--ess)}
+.cert-row.nice .cert-code{color:var(--nice)}
+
+.cert-info{flex:1}
+.cert-name{font-size:13px;font-weight:600;margin-bottom:2px;color:var(--ink)}
+.cert-desc{font-size:12px;color:var(--dim);line-height:1.5}
+.cert-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.cert-tag{
+  font-family:'Space Mono',monospace;font-size:9px;
+  padding:1px 6px;border-radius:2px;
+  background:var(--paper2);color:var(--dim);
+  border:1px solid var(--line);letter-spacing:.03em;
+  text-transform:uppercase;
+}
+.cert-meta{flex-shrink:0;text-align:right}
+.cert-timeline{
+  font-family:'Space Mono',monospace;font-size:10px;
+  color:var(--dim);white-space:nowrap;margin-bottom:3px;
+}
+.cert-cost{
+  font-family:'Space Mono',monospace;font-size:10px;
+  color:var(--gold);font-weight:700;
+}
+
+/* must badge */
+.must-flag{
+  font-family:'Space Mono',monospace;font-size:9px;
+  background:var(--must);color:#fff;
+  padding:2px 6px;border-radius:2px;
+  letter-spacing:.05em;text-transform:uppercase;
+  flex-shrink:0;margin-top:2px;
+}
+
+/* ─── MASTER LIST VIEW ──────────────────────────── */
+.master-table{
+  width:100%;border-collapse:collapse;
+}
+.master-table th{
+  font-family:'Space Mono',monospace;font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);padding:10px 12px;
+  text-align:left;border-bottom:2px solid var(--ink);
+  background:var(--paper);
+  position:sticky;top:0;z-index:10;
+}
+.master-table td{
+  padding:10px 12px;border-bottom:1px solid var(--line);
+  font-size:12px;vertical-align:middle;
+}
+.master-table tr:hover td{background:var(--paper2)}
+.master-table tr:last-child td{border-bottom:none}
+.m-code{font-family:'Space Mono',monospace;font-size:12px;font-weight:700}
+.m-status{
+  font-family:'Space Mono',monospace;font-size:9px;
+  padding:2px 7px;border-radius:2px;text-transform:uppercase;
+  letter-spacing:.04em;white-space:nowrap;
+}
+.m-active{background:var(--nice-bg);color:var(--nice);border:1px solid var(--nice-border)}
+.m-new{background:var(--ess-bg);color:var(--ess);border:1px solid var(--ess-border)}
+.m-watch{background:var(--gold-bg);color:var(--gold);border:1px solid #e8c878}
+.m-type-must{background:var(--must-bg);color:var(--must);border:1px solid var(--must-border);font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:2px;text-transform:uppercase;letter-spacing:.04em}
+.m-type-ess{background:var(--ess-bg);color:var(--ess);border:1px solid var(--ess-border);font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:2px;text-transform:uppercase;letter-spacing:.04em}
+.m-type-nice{background:var(--nice-bg);color:var(--nice);border:1px solid var(--nice-border);font-family:'Space Mono',monospace;font-size:9px;padding:2px 7px;border-radius:2px;text-transform:uppercase;letter-spacing:.04em}
+
+/* ─── TIMELINE VIEW ─────────────────────────────── */
+.timeline-wrap{position:relative;padding-left:56px}
+.timeline-wrap::before{
+  content:'';position:absolute;left:20px;top:0;bottom:0;
+  width:2px;background:linear-gradient(var(--ess),var(--must));
+}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-dot{
+  position:absolute;left:-44px;top:14px;
+  width:14px;height:14px;border-radius:50%;
+  border:2px solid var(--paper);
+  z-index:1;
+}
+.tl-card{
+  background:#fff;border:1.5px solid var(--line);
+  border-radius:4px;padding:16px 20px;
+}
+.tl-period{
+  font-family:'Space Mono',monospace;font-size:10px;
+  color:var(--dim);letter-spacing:.08em;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.tl-title{
+  font-family:'Bebas Neue',sans-serif;font-size:20px;
+  letter-spacing:.03em;margin-bottom:10px;
+}
+.tl-certs{display:flex;gap:6px;flex-wrap:wrap}
+.tl-cert{
+  font-family:'Space Mono',monospace;font-size:11px;
+  padding:4px 10px;border-radius:2px;font-weight:700;
+}
+
+/* ─── SUMMARY CARDS ─────────────────────────────── */
+.summary-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;margin-bottom:32px;
+}
+.sum-card{
+  background:#fff;border:1.5px solid var(--line);
+  border-radius:4px;padding:18px 20px;
+  transition:border-color .2s;
+}
+.sum-card:hover{border-color:var(--line2)}
+.sum-num{
+  font-family:'Bebas Neue',sans-serif;font-size:44px;
+  line-height:1;margin-bottom:4px;
+}
+.sum-label{font-size:12px;color:var(--dim)}
+
+/* ─── START BOX ──────────────────────────────────── */
+.start-box{
+  background:var(--ink);color:var(--paper);
+  border-radius:4px;padding:36px;
+  text-align:center;margin-top:48px;
+  position:relative;overflow:hidden;
+}
+.start-box::before{
+  content:'START';
+  position:absolute;right:-20px;top:50%;transform:translateY(-50%);
+  font-family:'Bebas Neue',sans-serif;
+  font-size:140px;line-height:1;
+  color:rgba(255,255,255,0.04);
+  pointer-events:none;letter-spacing:.05em;
+}
+.start-box h3{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;letter-spacing:.05em;margin-bottom:8px;
+}
+.start-box p{font-size:13px;color:var(--line2);margin-bottom:24px;line-height:1.6}
+.start-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-paper{
+  padding:10px 22px;background:var(--paper);color:var(--ink);
+  border-radius:2px;font-family:'Space Mono',monospace;
+  font-size:11px;font-weight:700;text-decoration:none;
+  letter-spacing:.05em;text-transform:uppercase;
+  transition:all .2s;
+}
+.btn-paper:hover{background:#fff;transform:translateY(-2px)}
+.btn-ghost{
+  padding:10px 22px;background:transparent;color:var(--paper);
+  border-radius:2px;font-family:'Space Mono',monospace;
+  font-size:11px;border:1px solid rgba(255,255,255,0.25);
+  text-decoration:none;letter-spacing:.05em;text-transform:uppercase;
+  transition:all .2s;
+}
+.btn-ghost:hover{border-color:var(--paper)}
+
+/* misc */
+.divider{height:1.5px;background:var(--line);margin:28px 0}
+@media(max-width:600px){
+  .role-right{display:none}
+  .tl-cert{font-size:10px;padding:3px 7px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">CE Track · Microsoft AI-First · Final Version May 2026</div>
+  <h1>CERT<span>IFICATION</span><br>CAREER LADDER</h1>
+  <div class="hero-rule"></div>
+  <p class="hero-sub">Every certification in ascending order for every role on your career path. What is absolutely non-negotiable, what is essential, and what is nice to have — clearly separated.</p>
+
+  <div class="legend">
+    <div class="leg leg-must"><div class="leg-dot" style="background:var(--must)"></div>Cannot avoid — blocks everything above it</div>
+    <div class="leg leg-ess"><div class="leg-dot" style="background:var(--ess)"></div>Essential — strongly recommended</div>
+    <div class="leg leg-nice"><div class="leg-dot" style="background:var(--nice)"></div>Nice to have — adds depth</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tabBtn on" onclick="showTab('ladder',this)">Career Ladder</button>
+  <button class="tabBtn" onclick="showTab('timeline',this)">Timeline</button>
+  <button class="tabBtn" onclick="showTab('master',this)">Master List</button>
+  <button class="tabBtn" onclick="showTab('summary',this)">Summary</button>
+</div>
+
+<!-- ═══════ CAREER LADDER VIEW ═══════ -->
+<div class="view on" id="view-ladder">
+
+  <!-- ROLE 1 -->
+  <div class="role-block" id="r1">
+    <div class="role-header" onclick="toggleRole('r1')">
+      <div class="role-num">01</div>
+      <div class="role-meta">
+        <div class="role-title" style="color:var(--r1)">Power Platform Developer</div>
+        <div class="role-sub">First job abroad · Microsoft Partner · Mazik Global / Avanade / HSO</div>
+        <div class="role-badges">
+          <span class="role-badge" style="background:#f0eafb;color:var(--r1)">Month 9–12</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">CE Track</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">Entry Level</span>
+        </div>
+      </div>
+      <div class="role-right">
+        <div class="role-salary">AED 18–25k/mo<small>UAE tax-free</small>€50–65k/yr<small>Germany</small></div>
+        <div class="role-toggle">▾</div>
+      </div>
+    </div>
+    <div class="role-body">
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--must)">
+          <span>🚨 Cannot Avoid — Absolute Prerequisites</span>
+          <small style="color:var(--dim);font-weight:400">Miss these and you cannot get this job</small>
+        </div>
+        <div class="certs-grid">
+          <div class="cert-row must">
+            <div class="cert-code">AZ-900</div>
+            <div class="cert-info">
+              <div class="cert-name">Azure Fundamentals</div>
+              <div class="cert-desc">Every Microsoft Partner requires this as baseline cloud knowledge. No exceptions. First thing you study, first thing you sit.</div>
+              <div class="cert-tags"><span class="cert-tag">Month 1</span><span class="cert-tag">8–10 hrs study</span><span class="cert-tag">Foundation for all others</span></div>
+            </div>
+            <div class="cert-meta">
+              <div class="cert-timeline">Month 1</div>
+              <div class="cert-cost">$165</div>
+            </div>
+            <div class="must-flag">Must</div>
+          </div>
+          <div class="cert-row must">
+            <div class="cert-code">PL-900</div>
+            <div class="cert-info">
+              <div class="cert-name">Power Platform Fundamentals</div>
+              <div class="cert-desc">Gateway cert to the entire Power Platform track. Cannot pursue PL-400 meaningfully without this foundation. Employers expect it.</div>
+              <div class="cert-tags"><span class="cert-tag">Month 2</span><span class="cert-tag">6–8 hrs study</span><span class="cert-tag">Refreshed Jun 2026</span></div>
+            </div>
+            <div class="cert-meta">
+              <div class="cert-timeline">Month 2</div>
+              <div class="cert-cost">$165</div>
+            </div>
+            <div class="must-flag">Must</div>
+          </div>
+          <div class="cert-row must">
+            <div class="cert-code">PL-400</div>
+            <div class="cert-info">
+              <div class="cert-name">Power Platform Developer Associate</div>
+              <div class="cert-desc">Your single biggest differentiator. C# plugins, Dataverse API, PCF controls. Most candidates cannot do this. You can. This cert proves it. Non-negotiable for the developer title.</div>
+              <div class="cert-tags"><span class="cert-tag">Month 4–5</span><span class="cert-tag">C# leverage</span><span class="cert-tag">Key differentiator</span></div>
+            </div>
+            <div class="cert-meta">
+              <div class="cert-timeline">Month 4–5</div>
+              <div class="cert-cost">$165</div>
+            </div>
+            <div class="must-flag">Must</div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--ess)">
+          <span>✅ Essential — Strongly Recommended</span>
+          <small style="color:var(--dim);font-weight:400">Without these your application is weaker</small>
+        </div>
+        <div class="certs-grid">
+          <div class="cert-row ess">
+            <div class="cert-code">PL-300</div>
+            <div class="cert-info">
+              <div class="cert-name">Power BI Data Analyst</div>
+              <div class="cert-desc">Every D365 project needs reporting. Shows data visualisation skill. Takes only 3 weeks. High return on time invested. Employers notice it.</div>
+              <div class="cert-tags"><span class="cert-tag">Month 3</span><span class="cert-tag">Quick win</span><span class="cert-tag">High visibility</span></div>
+            </div>
+            <div class="cert-meta">
+              <div class="cert-timeline">Month 3</div>
+              <div class="cert-cost">$165</div>
+            </div>
+          </div>
+          <div class="cert-row ess">
+            <div class="cert-code">AB-900</div>
+            <div class="cert-info">
+              <div class="cert-name">Copilot & Agent Administration Fundamentals</div>
+              <div class="cert-desc">New 2026 cert. Shows you understand the AI-era Microsoft platform. Employers in 2026 increasingly expect Copilot awareness. Replaces the old D365 fundamentals.</div>
+              <div class="cert-tags"><span class="cert-tag">Month 6</span><span class="cert-tag">Live Feb 2026</span><span class="cert-tag">AI fundamentals</span></div>
+            </div>
+            <div class="cert-meta">
+              <div class="cert-timeline">Month 6</div>
+              <div class="cert-cost">$165</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--nice)">
+          <span>💡 Nice to Have — Adds Depth</span>
+          <small style="color:var(--dim);font-weight:400">Good if you have time, not blocking</small>
+        </div>
+        <div class="certs-grid">
+          <div class="cert-row nice">
+            <div class="cert-code">AB-210</div>
+            <div class="cert-info">
+              <div class="cert-name">D365 Sales AI Consultant Associate</div>
+              <div class="cert-desc">Ideally sit this before first job but if time is tight, it can wait until Month 7–8. New cert, few holders — low competition window.</div>
+              <div class="cert-tags"><span class="cert-tag">Month 7–8</span><span class="cert-tag">Live Jun 2026</span><span class="cert-tag">D365 Sales</span></div>
+            </div>
+            <div class="cert-meta">
+              <div class="cert-timeline">Month 7–8</div>
+              <div class="cert-cost">$165</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLE 2 -->
+  <div class="role-block" id="r2">
+    <div class="role-header" onclick="toggleRole('r2')">
+      <div class="role-num">02</div>
+      <div class="role-meta">
+        <div class="role-title" style="color:var(--r2)">Senior D365 CE Developer</div>
+        <div class="role-sub">Year 1–2 abroad · Real client delivery experience · Microsoft Partner</div>
+        <div class="role-badges">
+          <span class="role-badge" style="background:#e8f3fb;color:var(--r2)">Year 1–2</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">CE Track</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">Mid Level</span>
+        </div>
+      </div>
+      <div class="role-right">
+        <div class="role-salary">AED 25–38k/mo<small>UAE tax-free</small>€62–85k/yr<small>Germany</small></div>
+        <div class="role-toggle">▾</div>
+      </div>
+    </div>
+    <div class="role-body">
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--must)"><span>🚨 Cannot Avoid</span></div>
+        <div class="certs-grid">
+          <div class="cert-row must">
+            <div class="cert-code">AB-210</div>
+            <div class="cert-info">
+              <div class="cert-name">D365 Sales AI Consultant Associate</div>
+              <div class="cert-desc">Must have this by Year 1 if not done before first job. This is the core D365 CE credential for 2026. Without it you are stuck at entry level.</div>
+              <div class="cert-tags"><span class="cert-tag">If not done — do immediately</span><span class="cert-tag">D365 Sales + Copilot</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">ASAP Year 1</div><div class="cert-cost">$165</div></div>
+            <div class="must-flag">Must</div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--ess)"><span>✅ Essential</span></div>
+        <div class="certs-grid">
+          <div class="cert-row ess">
+            <div class="cert-code">MB-230</div>
+            <div class="cert-info">
+              <div class="cert-name">D365 Customer Service Functional Consultant</div>
+              <div class="cert-desc">AB-210 covers Sales. MB-230 covers Customer Service. Together they make you a complete CE consultant. Sit this while working — real CS project experience makes it significantly easier.</div>
+              <div class="cert-tags"><span class="cert-tag">Year 2</span><span class="cert-tag">Active — not retiring</span><span class="cert-tag">Cases, queues, SLAs</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 2</div><div class="cert-cost">$165</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--nice)"><span>💡 Nice to Have</span></div>
+        <div class="certs-grid">
+          <div class="cert-row nice">
+            <div class="cert-code">AZ-104</div>
+            <div class="cert-info">
+              <div class="cert-name">Azure Administrator Associate</div>
+              <div class="cert-desc">Start studying this in Year 1 evenings. Official prerequisite for AZ-305. Does not need to be complete at this role but should be in progress.</div>
+              <div class="cert-tags"><span class="cert-tag">Start Year 1 evenings</span><span class="cert-tag">Prereq for AZ-305</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Complete Month 13–15</div><div class="cert-cost">$165</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLE 3 -->
+  <div class="role-block" id="r3">
+    <div class="role-header" onclick="toggleRole('r3')">
+      <div class="role-num">03</div>
+      <div class="role-meta">
+        <div class="role-title" style="color:var(--r3)">D365 + Azure Solutions Architect</div>
+        <div class="role-sub">Year 2–3 · Combined CE + Cloud profile · 30–40% salary uplift</div>
+        <div class="role-badges">
+          <span class="role-badge" style="background:#e4f5f0;color:var(--r3)">Year 2–3</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">CE + Azure</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">Senior</span>
+        </div>
+      </div>
+      <div class="role-right">
+        <div class="role-salary">AED 38–55k/mo<small>UAE tax-free</small>€85–110k/yr<small>Germany</small></div>
+        <div class="role-toggle">▾</div>
+      </div>
+    </div>
+    <div class="role-body">
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--must)"><span>🚨 Cannot Avoid — Both Required</span></div>
+        <div class="certs-grid">
+          <div class="cert-row must">
+            <div class="cert-code">AZ-104</div>
+            <div class="cert-info">
+              <div class="cert-name">Azure Administrator Associate</div>
+              <div class="cert-desc">Official Microsoft prerequisite for AZ-305. Cannot sit AZ-305 without this. No exceptions. Must be complete before attempting AZ-305.</div>
+              <div class="cert-tags"><span class="cert-tag">Month 13–15</span><span class="cert-tag">Mandatory prereq for AZ-305</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Month 13–15</div><div class="cert-cost">$165</div></div>
+            <div class="must-flag">Must</div>
+          </div>
+          <div class="cert-row must">
+            <div class="cert-code">AZ-305</div>
+            <div class="cert-info">
+              <div class="cert-name">Azure Solutions Architect Expert</div>
+              <div class="cert-desc">The most respected Azure cert globally. This single cert combined with your D365 experience adds 30–40% to your salary at Microsoft Partners. Non-negotiable for the Architect title. This is what separates €65k profiles from €95k profiles.</div>
+              <div class="cert-tags"><span class="cert-tag">Month 16–18</span><span class="cert-tag">Crown jewel</span><span class="cert-tag">Requires AZ-104</span><span class="cert-tag">Updated Apr 2026</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Month 16–18</div><div class="cert-cost">$165</div></div>
+            <div class="must-flag">Must</div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--ess)"><span>✅ Essential</span></div>
+        <div class="certs-grid">
+          <div class="cert-row ess">
+            <div class="cert-code">MB-230</div>
+            <div class="cert-info">
+              <div class="cert-name">D365 Customer Service Functional Consultant</div>
+              <div class="cert-desc">If not done at Role 2 level, must be complete by this point. You cannot credibly design D365 CE solutions without Customer Service knowledge alongside Sales.</div>
+              <div class="cert-tags"><span class="cert-tag">Year 2 if not done</span><span class="cert-tag">Active cert</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 2</div><div class="cert-cost">$165</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--nice)"><span>💡 Nice to Have</span></div>
+        <div class="certs-grid">
+          <div class="cert-row nice">
+            <div class="cert-code">AB-250</div>
+            <div class="cert-info">
+              <div class="cert-name">D365 Contact Center AI Engineer Associate</div>
+              <div class="cert-desc">New cert — beta June 2026, live August 2026. Covers AI-powered customer service and contact centre. Adds depth to your Customer Service track alongside MB-230.</div>
+              <div class="cert-tags"><span class="cert-tag">Live Aug 2026</span><span class="cert-tag">Contact Center AI</span><span class="cert-tag">Emerging role</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 3</div><div class="cert-cost">$165</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLE 4 -->
+  <div class="role-block" id="r4">
+    <div class="role-header" onclick="toggleRole('r4')">
+      <div class="role-num">04</div>
+      <div class="role-meta">
+        <div class="role-title" style="color:var(--r4)">Agentic AI Business Solutions Architect</div>
+        <div class="role-sub">Year 3 · New AI-era role · Replaces old MB-700 track · Rarest profile</div>
+        <div class="role-badges">
+          <span class="role-badge" style="background:var(--gold-bg);color:var(--gold)">Year 3</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">Expert Level</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">AI-First</span>
+        </div>
+      </div>
+      <div class="role-right">
+        <div class="role-salary">AED 45–65k/mo<small>UAE tax-free</small>€90–130k/yr<small>Germany</small></div>
+        <div class="role-toggle">▾</div>
+      </div>
+    </div>
+    <div class="role-body">
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--must)"><span>🚨 Cannot Avoid</span></div>
+        <div class="certs-grid">
+          <div class="cert-row must">
+            <div class="cert-code">AB-100</div>
+            <div class="cert-info">
+              <div class="cert-name">Agentic AI Business Solutions Architect Expert</div>
+              <div class="cert-desc">The new crown jewel. Replaces MB-700, PL-600, and all old expert-level D365/Power Platform certs. Covers multi-agent AI orchestration, Copilot Studio, Azure AI Foundry, D365 integration. Held by very few globally. Prerequisite: any active associate cert — PL-400 or AB-210 both qualify you. This cert makes recruiters call you.</div>
+              <div class="cert-tags"><span class="cert-tag">Year 3</span><span class="cert-tag">Prereq: PL-400 or AB-210</span><span class="cert-tag">Live Feb 2026</span><span class="cert-tag">Rarest profile</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 3</div><div class="cert-cost">$165</div></div>
+            <div class="must-flag">Must</div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--ess)"><span>✅ Essential — Context for AB-100</span></div>
+        <div class="certs-grid">
+          <div class="cert-row ess">
+            <div class="cert-code">AB-410</div>
+            <div class="cert-info">
+              <div class="cert-name">Intelligent Applications Builder Associate</div>
+              <div class="cert-desc">New cert — beta April 2026, live June 2026. Covers building AI-powered apps on Power Platform and Azure. Directly relevant to what AB-100 tests at expert level. Good preparation cert before AB-100.</div>
+              <div class="cert-tags"><span class="cert-tag">Live Jun 2026</span><span class="cert-tag">AI app building</span><span class="cert-tag">AB-100 preparation</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 2–3</div><div class="cert-cost">$165</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--nice)"><span>💡 Nice to Have</span></div>
+        <div class="certs-grid">
+          <div class="cert-row nice">
+            <div class="cert-code">AB-730</div>
+            <div class="cert-info">
+              <div class="cert-name">Copilot Studio Developer Associate</div>
+              <div class="cert-desc">Specialist cert for building custom Copilot agents. Adds depth to your AI architect profile. Useful if you are doing a lot of Copilot Studio work on client projects.</div>
+              <div class="cert-tags"><span class="cert-tag">Year 3</span><span class="cert-tag">Copilot Studio</span><span class="cert-tag">Agent building</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 3</div><div class="cert-cost">$165</div></div>
+          </div>
+          <div class="cert-row nice">
+            <div class="cert-code">AB-731</div>
+            <div class="cert-info">
+              <div class="cert-name">Copilot Studio Administrator Associate</div>
+              <div class="cert-desc">Admin and governance of Copilot agents at scale. Pairs with AB-730 for a complete Copilot Studio specialisation. Nice complement at architect level.</div>
+              <div class="cert-tags"><span class="cert-tag">Year 3</span><span class="cert-tag">Copilot governance</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 3</div><div class="cert-cost">$165</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLE 5 -->
+  <div class="role-block" id="r5">
+    <div class="role-header" onclick="toggleRole('r5')">
+      <div class="role-num">05</div>
+      <div class="role-meta">
+        <div class="role-title" style="color:var(--r5)">Cloud & AI Security Architect</div>
+        <div class="role-sub">Year 3–4 · Highest salary bracket · Top 1% Microsoft ecosystem globally</div>
+        <div class="role-badges">
+          <span class="role-badge" style="background:#f5eaf5;color:var(--r5)">Year 3–4</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">Security + AI</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">Expert Level</span>
+        </div>
+      </div>
+      <div class="role-right">
+        <div class="role-salary">AED 55–80k/mo<small>UAE tax-free</small>€105–150k/yr<small>Germany</small></div>
+        <div class="role-toggle">▾</div>
+      </div>
+    </div>
+    <div class="role-body">
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--must)"><span>🚨 Cannot Avoid — In Sequence</span></div>
+        <div class="certs-grid">
+          <div class="cert-row must">
+            <div class="cert-code">SC-500</div>
+            <div class="cert-info">
+              <div class="cert-name">Cloud & AI Security Engineer Associate (replaces AZ-500)</div>
+              <div class="cert-desc">New 2026 cert replacing AZ-500. Same knowledge updated for AI-era threats — Zero Trust, Microsoft Defender, Sentinel, AI security. Required before SC-100. Must be done first in the security track.</div>
+              <div class="cert-tags"><span class="cert-tag">Year 3</span><span class="cert-tag">Replaces AZ-500</span><span class="cert-tag">Prereq for SC-100</span><span class="cert-tag">New 2026</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 3</div><div class="cert-cost">$165</div></div>
+            <div class="must-flag">Must</div>
+          </div>
+          <div class="cert-row must">
+            <div class="cert-code">SC-100</div>
+            <div class="cert-info">
+              <div class="cert-name">Microsoft Cybersecurity Architect Expert</div>
+              <div class="cert-desc">The single rarest cert in this entire roadmap. Under 2% of Microsoft certified professionals hold it globally. Updated January 2026 for Zero Trust and modern Azure security. Combined with AB-100 and AZ-305 this is a top 1% global Microsoft profile. Recruiters headhunt SC-100 holders.</div>
+              <div class="cert-tags"><span class="cert-tag">Year 4</span><span class="cert-tag">Requires SC-500</span><span class="cert-tag">Updated Jan 2026</span><span class="cert-tag">Under 2% globally</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 4</div><div class="cert-cost">$165</div></div>
+            <div class="must-flag">Must</div>
+          </div>
+        </div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--nice)"><span>💡 Nice to Have</span></div>
+        <div class="certs-grid">
+          <div class="cert-row nice">
+            <div class="cert-code">SC-900</div>
+            <div class="cert-info">
+              <div class="cert-name">Security Fundamentals</div>
+              <div class="cert-desc">Easy gateway cert if you want a quick security credential before diving into SC-500. Optional — SC-500 does not require it, but it helps ease into security thinking if this is new territory.</div>
+              <div class="cert-tags"><span class="cert-tag">Optional gateway</span><span class="cert-tag">2–3 weeks</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Before SC-500</div><div class="cert-cost">$165</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLE 6 -->
+  <div class="role-block" id="r6">
+    <div class="role-header" onclick="toggleRole('r6')">
+      <div class="role-num">06</div>
+      <div class="role-meta">
+        <div class="role-title" style="color:var(--r6)">Senior Architect / Independent Consultant</div>
+        <div class="role-sub">Year 5+ · EU Permanent Residency · Complete freedom · Second passport</div>
+        <div class="role-badges">
+          <span class="role-badge" style="background:var(--must-bg);color:var(--must)">Year 5+</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">Principal Level</span>
+          <span class="role-badge" style="background:var(--paper2);color:var(--dim)">Freedom</span>
+        </div>
+      </div>
+      <div class="role-right">
+        <div class="role-salary">€130–200k/yr<small>Germany employed</small>€800–1500/day<small>Freelance</small></div>
+        <div class="role-toggle">▾</div>
+      </div>
+    </div>
+    <div class="role-body">
+      <div class="cert-section">
+        <div class="cert-section-label"><span style="color:var(--dim)">All previous certs complete. No new mandatory certs at this level.</span></div>
+      </div>
+      <div class="cert-section">
+        <div class="cert-section-label" style="color:var(--nice)"><span>💡 Optional Specialist Additions</span></div>
+        <div class="certs-grid">
+          <div class="cert-row nice">
+            <div class="cert-code">AI-102</div>
+            <div class="cert-info">
+              <div class="cert-name">Azure AI Engineer Associate (check if replaced by AI-103)</div>
+              <div class="cert-desc">If you want to deepen Azure AI capabilities alongside your architect profile. Watch retirement status — AI-102 has been flagged for 2026 replacement by AI-103.</div>
+              <div class="cert-tags"><span class="cert-tag">Optional deepening</span><span class="cert-tag">Verify status before studying</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 5+</div><div class="cert-cost">$165</div></div>
+          </div>
+          <div class="cert-row nice">
+            <div class="cert-code">DP-600</div>
+            <div class="cert-info">
+              <div class="cert-name">Fabric Analytics Engineer Associate</div>
+              <div class="cert-desc">Microsoft Fabric — the unified data platform. Adds data engineering depth to your architect profile. Useful if clients ask for data platform design alongside D365 implementations.</div>
+              <div class="cert-tags"><span class="cert-tag">Optional</span><span class="cert-tag">Microsoft Fabric</span><span class="cert-tag">Data platform</span></div>
+            </div>
+            <div class="cert-meta"><div class="cert-timeline">Year 5+</div><div class="cert-cost">$165</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--paper2);border:1px solid var(--line);border-radius:3px;padding:16px 18px;margin-top:16px">
+        <div style="font-family:'Space Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);margin-bottom:8px">Your complete stack by Year 5</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">AZ-900</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">PL-900</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">PL-400</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--ess-bg);color:var(--ess);border-radius:2px;border:1px solid var(--ess-border)">PL-300</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--ess-bg);color:var(--ess);border-radius:2px;border:1px solid var(--ess-border)">AB-900</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">AB-210</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--ess-bg);color:var(--ess);border-radius:2px;border:1px solid var(--ess-border)">MB-230</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">AZ-104</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">AZ-305</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">AB-100</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">SC-500</span>
+          <span style="font-family:'Space Mono',monospace;font-size:10px;padding:3px 8px;background:var(--must-bg);color:var(--must);border-radius:2px;border:1px solid var(--must-border)">SC-100</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="start-box">
+    <h3>Everything starts with AZ-900 today.</h3>
+    <p>45 minutes. Module 1. That is all that is required of you right now.<br>Every role above, every salary above, every country above — flows from this one step.</p>
+    <div class="start-btns">
+      <a class="btn-paper" href="https://learn.microsoft.com/certifications/azure-fundamentals/" target="_blank">Open AZ-900 Now →</a>
+      <a class="btn-ghost" href="https://make.powerapps.com" target="_blank">Free Power Apps Env</a>
+      <a class="btn-ghost" href="https://azure.microsoft.com/free" target="_blank">Azure Free Account</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TIMELINE VIEW ═══════ -->
+<div class="view" id="view-timeline">
+  <div class="timeline-wrap">
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--must)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Month 1</div>
+        <div class="tl-title">Azure Fundamentals</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">AZ-900 🚨 Must</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">1 hour/day at work. 8–10 hrs total. Sit exam end of month. First cert on your CV.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--must)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Month 2</div>
+        <div class="tl-title">Power Platform Gateway</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">PL-900 🚨 Must</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">Power Apps, Power Automate, Power BI overview. Gateway to everything that follows. Your compiled resources — Lisa Crosbie, Shane Young — apply here.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--ess)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Month 3</div>
+        <div class="tl-title">Power BI Quick Win</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--ess-bg);color:var(--ess);border:1px solid var(--ess-border)">PL-300 ✅ Essential</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">DAX, Power Query, dashboards. Download Power BI Desktop free. Build real dashboards on Kaggle datasets. Guy in a Cube YouTube.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--must)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Month 4–5</div>
+        <div class="tl-title">Your Biggest Differentiator</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">PL-400 🚨 Must</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">C# plugins, Dataverse API, PCF controls. Most candidates cannot do this. You can. Reza Dorrani YouTube. Build a real plugin in Visual Studio.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--ess)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Month 6</div>
+        <div class="tl-title">AI-Era Fundamentals</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--ess-bg);color:var(--ess);border:1px solid var(--ess-border)">AB-900 ✅ Essential</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">Copilot + Agent administration. New 2026 cert. Study D365 CE via free Microsoft Learn paths + free D365 trial alongside this.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--must)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Month 7–8</div>
+        <div class="tl-title">D365 Sales AI Credential</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">AB-210 🚨 Must</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">D365 Sales + Copilot + AI agents. Live June 2026. New cert, few holders — low competition window. Core D365 CE credential for 2026.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--r3)"></div>
+      <div class="tl-card" style="border-color:var(--r3);background:#edf9f5">
+        <div class="tl-period">Month 9–12</div>
+        <div class="tl-title" style="color:var(--r3)">🎯 Portfolio + First Job Applications</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--nice-bg);color:var(--nice);border:1px solid var(--nice-border)">Build project</span>
+          <span class="tl-cert" style="background:var(--nice-bg);color:var(--nice);border:1px solid var(--nice-border)">Apply abroad</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">Mazik Global + Avanade + HSO + Capgemini + KPMG. LinkedIn, Bayt.com, GulfTalent. UAE first for speed.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--r1)"></div>
+      <div class="tl-card" style="border-color:var(--r1);background:#f5f0fe">
+        <div class="tl-period">Month 12–15 🎉</div>
+        <div class="tl-title" style="color:var(--r1)">FIRST JOB ABROAD — RELOCATED</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:#f5f0fe;color:var(--r1);border:1px solid #c9b0f5">AED 18–25k/mo UAE</span>
+          <span class="tl-cert" style="background:#f5f0fe;color:var(--r1);border:1px solid #c9b0f5">€50–65k Germany</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">7x your current salary. Tax free in UAE. Study Azure in evenings from here.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--must)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Month 13–15 (while working)</div>
+        <div class="tl-title">Azure Administration</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">AZ-104 🚨 Must</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">Mandatory prereq for AZ-305. John Savill YouTube. Official GitHub labs. Study 1hr evenings while earning abroad.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--must)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Month 16–18 (while working)</div>
+        <div class="tl-title">Azure Architect Expert</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">AZ-305 🚨 Must ⭐⭐</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">Most respected Azure cert globally. 30–40% salary uplift. John Savill Study Cram on YouTube. Azure Architecture Center reference designs.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--ess)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Year 2</div>
+        <div class="tl-title">D365 Customer Service</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--ess-bg);color:var(--ess);border:1px solid var(--ess-border)">MB-230 ✅ Essential</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">Sit while working on real CS projects. AB-210 = Sales. MB-230 = Customer Service. Together = complete CE consultant. Real experience makes this exam significantly easier.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--must)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Year 3</div>
+        <div class="tl-title">AI Architect Expert</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">AB-100 🚨 Must ⭐⭐⭐</span>
+          <span class="tl-cert" style="background:var(--ess-bg);color:var(--ess);border:1px solid var(--ess-border)">AB-410 ✅ Essential</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">New crown jewel. Replaces MB-700. Multi-agent AI, Copilot Studio, Azure AI Foundry. Recruiters find you at this level. Prerequisite: PL-400 or AB-210 — you already have both.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--must)"></div>
+      <div class="tl-card">
+        <div class="tl-period">Year 3–4</div>
+        <div class="tl-title">Security Architect</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">SC-500 🚨 Must</span>
+          <span class="tl-cert" style="background:var(--must-bg);color:var(--must);border:1px solid var(--must-border)">SC-100 🚨 Must ⭐⭐⭐</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">SC-500 replaces AZ-500. SC-100 + AB-100 + AZ-305 = top 1% global Microsoft profile. Under 2% of certified professionals globally hold SC-100. Jobs find you.</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="background:var(--gold)"></div>
+      <div class="tl-card" style="border-color:var(--gold);background:var(--gold-bg)">
+        <div class="tl-period">Year 5+ 🏆</div>
+        <div class="tl-title" style="color:var(--gold)">EU PR + Senior Architect / Independent</div>
+        <div class="tl-certs">
+          <span class="tl-cert" style="background:var(--gold-bg);color:var(--gold);border:1px solid #e8c878">€130–200k/yr</span>
+          <span class="tl-cert" style="background:var(--gold-bg);color:var(--gold);border:1px solid #e8c878">€800–1500/day freelance</span>
+          <span class="tl-cert" style="background:var(--gold-bg);color:var(--gold);border:1px solid #e8c878">EU Permanent Residency</span>
+        </div>
+        <div style="font-size:12px;color:var(--dim);margin-top:10px">5 years Germany/Netherlands = EU PR application. Second passport on track. Flexible hours. Meaningful work. Good life. Exactly what you described.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MASTER LIST VIEW ═══════ -->
+<div class="view" id="view-master">
+  <div style="overflow-x:auto;border:1.5px solid var(--line);border-radius:4px">
+  <table class="master-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>When</th>
+        <th>For Role</th>
+        <th>Status</th>
+        <th>Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">01</td><td><span class="m-code" style="color:var(--must)">AZ-900</span></td><td>Azure Fundamentals</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Month 1</td><td style="font-size:11px;color:var(--dim)">All roles</td><td><span class="m-status m-active">Active</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">02</td><td><span class="m-code" style="color:var(--must)">PL-900</span></td><td>Power Platform Fundamentals</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Month 2</td><td style="font-size:11px;color:var(--dim)">All PP roles</td><td><span class="m-status m-active">Refreshed Jun 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">03</td><td><span class="m-code" style="color:var(--ess)">PL-300</span></td><td>Power BI Data Analyst</td><td><span class="m-type-ess">Essential</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Month 3</td><td style="font-size:11px;color:var(--dim)">Role 1+</td><td><span class="m-status m-active">Active</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">04</td><td><span class="m-code" style="color:var(--must)">PL-400</span></td><td>Power Platform Developer Associate</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Month 4–5</td><td style="font-size:11px;color:var(--dim)">Role 1+</td><td><span class="m-status m-active">Active</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">05</td><td><span class="m-code" style="color:var(--ess)">AB-900</span></td><td>Copilot & Agent Administration Fundamentals</td><td><span class="m-type-ess">Essential</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Month 6</td><td style="font-size:11px;color:var(--dim)">Role 1+</td><td><span class="m-status m-new">Live Feb 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">06</td><td><span class="m-code" style="color:var(--must)">AB-210</span></td><td>D365 Sales AI Consultant Associate</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Month 7–8</td><td style="font-size:11px;color:var(--dim)">Role 1+</td><td><span class="m-status m-new">Live Jun 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">07</td><td><span class="m-code" style="color:var(--must)">AZ-104</span></td><td>Azure Administrator Associate</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Month 13–15</td><td style="font-size:11px;color:var(--dim)">Role 3+</td><td><span class="m-status m-active">Active</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">08</td><td><span class="m-code" style="color:var(--ess)">MB-230</span></td><td>D365 Customer Service Functional Consultant</td><td><span class="m-type-ess">Essential</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 2</td><td style="font-size:11px;color:var(--dim)">Role 2+</td><td><span class="m-status m-active">Active — watch retirement</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">09</td><td><span class="m-code" style="color:var(--must)">AZ-305</span></td><td>Azure Solutions Architect Expert</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Month 16–18</td><td style="font-size:11px;color:var(--dim)">Role 3+</td><td><span class="m-status m-active">Updated Apr 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">10</td><td><span class="m-code" style="color:var(--ess)">AB-410</span></td><td>Intelligent Applications Builder Associate</td><td><span class="m-type-ess">Essential</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 2–3</td><td style="font-size:11px;color:var(--dim)">Role 4+</td><td><span class="m-status m-new">Live Jun 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">11</td><td><span class="m-code" style="color:var(--must)">AB-100</span></td><td>Agentic AI Business Solutions Architect Expert</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 3</td><td style="font-size:11px;color:var(--dim)">Role 4+</td><td><span class="m-status m-new">Live Feb 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">12</td><td><span class="m-code" style="color:var(--nice)">AB-730</span></td><td>Copilot Studio Developer Associate</td><td><span class="m-type-nice">Nice</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 3</td><td style="font-size:11px;color:var(--dim)">Role 4</td><td><span class="m-status m-new">2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">13</td><td><span class="m-code" style="color:var(--nice)">AB-731</span></td><td>Copilot Studio Administrator Associate</td><td><span class="m-type-nice">Nice</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 3</td><td style="font-size:11px;color:var(--dim)">Role 4</td><td><span class="m-status m-new">2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">14</td><td><span class="m-code" style="color:var(--nice)">AB-250</span></td><td>D365 Contact Center AI Engineer Associate</td><td><span class="m-type-nice">Nice</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 3</td><td style="font-size:11px;color:var(--dim)">Role 3</td><td><span class="m-status m-new">Live Aug 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">15</td><td><span class="m-code" style="color:var(--must)">SC-500</span></td><td>Cloud & AI Security Engineer (replaces AZ-500)</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 3</td><td style="font-size:11px;color:var(--dim)">Role 5+</td><td><span class="m-status m-new">New 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">16</td><td><span class="m-code" style="color:var(--must)">SC-100</span></td><td>Microsoft Cybersecurity Architect Expert</td><td><span class="m-type-must">Must</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 4</td><td style="font-size:11px;color:var(--dim)">Role 5+</td><td><span class="m-status m-active">Updated Jan 2026</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">17</td><td><span class="m-code" style="color:var(--nice)">SC-900</span></td><td>Security Fundamentals</td><td><span class="m-type-nice">Nice</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Before SC-500</td><td style="font-size:11px;color:var(--dim)">Optional gateway</td><td><span class="m-status m-active">Active</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+      <tr><td style="color:var(--dim);font-family:'Space Mono',monospace;font-size:11px">18</td><td><span class="m-code" style="color:var(--nice)">DP-600</span></td><td>Fabric Analytics Engineer Associate</td><td><span class="m-type-nice">Nice</span></td><td style="font-family:'Space Mono',monospace;font-size:11px">Year 5+</td><td style="font-size:11px;color:var(--dim)">Role 6 optional</td><td><span class="m-status m-active">Active</span></td><td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gold)">$165</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ═══════ SUMMARY VIEW ═══════ -->
+<div class="view" id="view-summary">
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="sum-num" style="color:var(--must)">7</div>
+      <div class="sum-label">Cannot avoid certs<br><small style="color:var(--dim)">Miss one = blocked from next role</small></div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-num" style="color:var(--ess)">5</div>
+      <div class="sum-label">Essential certs<br><small style="color:var(--dim)">Strongly recommended for each level</small></div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-num" style="color:var(--nice)">6</div>
+      <div class="sum-label">Nice to have certs<br><small style="color:var(--dim)">Adds depth, not blocking</small></div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-num" style="color:var(--ink)">18</div>
+      <div class="sum-label">Total certs tracked<br><small style="color:var(--dim)">Including optional specialist additions</small></div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-num" style="color:var(--gold)">$2,970</div>
+      <div class="sum-label">Total exam cost (18 certs)<br><small style="color:var(--dim)">At $165 each — spread over 4+ years</small></div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-num" style="color:var(--r3)">€200k</div>
+      <div class="sum-label">Year 5+ salary ceiling<br><small style="color:var(--dim)">Independent consultant Europe</small></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:16px">The 7 you absolutely cannot skip — in order</div>
+  <div style="display:grid;gap:8px">
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--must-bg);border:1px solid var(--must-border);border-radius:3px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--must);width:32px">1</span>
+      <div><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--must)">AZ-900</span> <span style="font-size:12px"> — Azure Fundamentals — Month 1 — Foundation for everything</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--must-bg);border:1px solid var(--must-border);border-radius:3px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--must);width:32px">2</span>
+      <div><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--must)">PL-900</span> <span style="font-size:12px"> — Power Platform Fundamentals — Month 2 — Gateway cert</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--must-bg);border:1px solid var(--must-border);border-radius:3px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--must);width:32px">3</span>
+      <div><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--must)">PL-400</span> <span style="font-size:12px"> — Power Platform Developer — Month 4–5 — Your C# advantage, biggest differentiator</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--must-bg);border:1px solid var(--must-border);border-radius:3px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--must);width:32px">4</span>
+      <div><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--must)">AB-210</span> <span style="font-size:12px"> — D365 Sales AI Consultant — Month 7–8 — Core D365 CE credential 2026</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--must-bg);border:1px solid var(--must-border);border-radius:3px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--must);width:32px">5</span>
+      <div><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--must)">AZ-104</span> <span style="font-size:12px"> — Azure Administrator — Month 13–15 — Mandatory prereq for AZ-305</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--must-bg);border:1px solid var(--must-border);border-radius:3px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--must);width:32px">6</span>
+      <div><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--must)">AZ-305</span> <span style="font-size:12px"> — Azure Solutions Architect Expert — Month 16–18 — 30–40% salary uplift</span></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--must-bg);border:1px solid var(--must-border);border-radius:3px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--must);width:32px">7</span>
+      <div><span style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:var(--must)">AB-100</span> <span style="font-size:12px"> — Agentic AI Architect Expert — Year 3 — New crown jewel, recruiter magnet</span></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end page -->
+
+<script>
+function showTab(id,btn){
+  document.querySelectorAll('.tabBtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('view-'+id).classList.add('on');
+}
+function toggleRole(id){
+  const el=document.getElementById(id);
+  el.classList.toggle('open');
+}
+// Auto-open first role
+document.getElementById('r1').classList.add('open');
+</script>
+</body>
+</html>
